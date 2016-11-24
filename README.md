@@ -2,9 +2,9 @@
 
 # Kuzzle compatibility
 
-Versions 2.x of this plugin are compatible with Kuzzle v1.0.0-RC.4 and upper.
+Versions 3.x of this plugin are compatible with Kuzzle v1.0.0-RC.8 and upper.
 
-For older versions of Kuzzle, install v1.x versions of this plugin instead.
+For older versions of Kuzzle, install v1.x or v2.x versions of this plugin instead.
 
 # Plugin Local Password Authentication
 
