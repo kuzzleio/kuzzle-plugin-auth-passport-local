@@ -23,13 +23,6 @@
   "bugs": {
     "url": "https://github.com/kuzzleio/kuzzle-plugin-auth-passport-local/issues"
   },
-  "pluginInfo": {
-    "defaultConfig": {
-      "secret": "changeme",
-      "algorithm": "sha1",
-      "digest": "hex"
-    }
-  },
   "license": "Apache-2.0",
   "dependencies": {
     "lodash.isstring": "^4.0.1",
