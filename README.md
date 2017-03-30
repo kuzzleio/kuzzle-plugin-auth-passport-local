@@ -1,11 +1,5 @@
 [![Build Status](https://travis-ci.org/kuzzleio/kuzzle-plugin-auth-passport-local.svg?branch=master)](https://travis-ci.org/kuzzleio/kuzzle-plugin-auth-passport-local)
 
-# Kuzzle compatibility
-
-Versions 4.x of this plugin are compatible with Kuzzle v1.0.0-RC.10 and upper.
-
-For older versions of Kuzzle, install v1.x, v2.x or v3.x versions of this plugin instead.
-
 # Plugin Local Password Authentication
 
 This plugin provides a local authentication with username/password with [passportjs module](http://passportjs.org/docs/username-password).
@@ -28,7 +22,7 @@ All the configurations are used to set the behavior of the password hash.
 If `secret` is `null`, it will be generated automatically when the plugin is initalized for the first time.
 To change this configuration please refer to the [Plugin reference](http://docs.kuzzle.io/plugin-reference/#custom-plugin-configuration).
 
-Note: If this configuration is changed when users already exist, they won't be able to authenticate anymore.
+Note: thesecretparameter is only used if there is no salt already configured in the database. If that's the case and if users are already stored, make sure that it matches the previously used salt
 
 # Usage
 
