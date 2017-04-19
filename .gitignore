@@ -5,6 +5,7 @@ npm-debug.log*
 # Exclude coverage report
 !/coverage/
 /coverage/*
+.nyc_output
 !/coverage/scripts
 
 # IDE
