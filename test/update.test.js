@@ -1,19 +1,21 @@
 const
   should = require('should'),
-  rewire = require('rewire'),
-  PluginLocal = rewire('../lib'),
+  PluginLocal = require('../lib'),
   sandbox = require('sinon').sandbox.create();
 
 describe('#update', () => {
   let
     pluginLocal,
-    pluginContext = rewire('./mock/pluginContext.mock.js'),
-    repository = rewire('./mock/repository.mock.js');
+    pluginContext = require('./mock/pluginContext.mock.js'),
+    repository = require('./mock/repository.mock.js');
 
-  beforeEach(function () {
+  beforeEach(() => {
     sandbox.reset();
     pluginLocal = new PluginLocal();
     pluginLocal.getUsersRepository = repository;
+    pluginLocal.passwordManager = {
+      encryptPassword: sandbox.stub().callsFake(password => password)
+    };
     pluginLocal.context = pluginContext;
   });
 
@@ -38,6 +40,6 @@ describe('#update', () => {
       update: () => Promise.resolve({_id: 'foo'})
     });
 
-    return should(pluginLocal.update(null, {username: 'foo', password: 'bar'}, 'foo')).be.fulfilledWith({_id: 'foo'});
+    return should(pluginLocal.update(null, {username: 'foo', password: 'bar'}, 'foo')).be.fulfilledWith({username: 'foo'});
   });
 });

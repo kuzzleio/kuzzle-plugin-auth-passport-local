@@ -1,22 +1,18 @@
 const
   should = require('should'),
-  rewire = require('rewire'),
-  PluginLocal = rewire('../lib');
+  PluginLocal = require('../lib');
 
-describe('#init', function () {
+describe('#init', () => {
   let
     pluginLocal,
-    pluginContext = rewire('./mock/pluginContext.mock.js');
+    pluginContext = require('./mock/pluginContext.mock.js');
 
-  beforeEach(function () {
+  beforeEach(() => {
     pluginLocal = new PluginLocal();
+    pluginLocal.context = pluginContext;
   });
 
-  it('should return a Promise', function () {
-    should(pluginLocal.init(null, pluginContext)).be.a.Promise();
-  });
-
-  it('should initialize a \'local\' strategy', function () {
+  it('should initialize a \'local\' strategy', () => {
     should(pluginLocal.strategies).not.be.ok();
 
     pluginLocal.init(null, pluginContext);
@@ -24,7 +20,7 @@ describe('#init', function () {
     should(pluginLocal.strategies).be.Object().and.match({
       local: {
         config: {
-          constructor: function () {},
+          constructor: () => {},
           strategyOptions: {},
           authenticateOptions: {
             scope: []

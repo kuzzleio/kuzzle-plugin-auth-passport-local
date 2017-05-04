@@ -1,42 +1,30 @@
 const
   should = require('should'),
-  rewire = require('rewire'),
-  PluginLocal = rewire('../lib');
+  PluginLocal = require('../lib');
 
-describe('#getInfo', function () {
+describe('#getInfo', () => {
   let
     pluginLocal,
-    pluginContext = rewire('./mock/pluginContext.mock.js'),
-    repository = rewire('./mock/repository.mock.js');
+    pluginContext = require('./mock/pluginContext.mock.js'),
+    repository = require('./mock/repository.mock.js');
 
-  beforeEach(function () {
+  beforeEach(() => {
     pluginLocal = new PluginLocal();
     pluginLocal.getUsersRepository = repository;
-
-    pluginLocal.init(null, pluginContext);
+    pluginLocal.context = pluginContext;
   });
 
-  it('should return a user object if the user exists', function() {
-    pluginLocal.getInfo(null, 'foo')
-      .then(result => {
-        should(result).match({username: 'foo2'});
-      });
+  it('should return a user object if the user exists', () => {
+    return should(pluginLocal.getInfo(null, 'foo')).be.fulfilledWith({username: 'foo2'});
   });
 
-  it('should throw an error if the user doesn\'t exists', function(done) {
+  it('should throw an error if the user doesn\'t exists', () => {
     pluginLocal.getUsersRepository = () => {
       return {
         search: () => Promise.resolve({total: 0, hits: []})
       };
     };
 
-    pluginLocal.getInfo(null, 'foo')
-      .then(() => {
-        done(new Error('Should not have succeeded'));
-      })
-      .catch(error => {
-        should(error.message).be.eql('A strategy does not exist for this user.');
-        done();
-      });
+    return should(pluginLocal.getInfo(null, 'foo')).be.rejectedWith({message: 'A strategy does not exist for this user.'});
   });
 });

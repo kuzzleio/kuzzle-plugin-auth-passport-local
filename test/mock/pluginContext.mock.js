@@ -1,10 +1,11 @@
 const
   sinon = require('sinon'),
-  defaultError = sinon.stub().callsFake(message => {return {message}});
+  defaultError = sinon.stub().callsFake(message => {return {message}}),
+  repository = require('./repository.mock');
 
 module.exports = {
   constructors: {
-    Repository: sinon.stub(),
+    Repository: repository,
     Request: sinon.stub()
   },
   accessors: {

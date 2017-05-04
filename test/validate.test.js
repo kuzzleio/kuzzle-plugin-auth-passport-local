@@ -1,19 +1,17 @@
 const
   should = require('should'),
-  rewire = require('rewire'),
-  PluginLocal = rewire('../lib');
+  PluginLocal = require('../lib');
 
 describe('#validate', () => {
   let
     pluginLocal,
-    pluginContext = rewire('./mock/pluginContext.mock.js'),
-    repository = rewire('./mock/repository.mock.js');
+    pluginContext = require('./mock/pluginContext.mock.js'),
+    repository = require('./mock/repository.mock.js');
 
   beforeEach(() => {
     pluginLocal = new PluginLocal();
     pluginLocal.getUsersRepository = repository;
-
-    pluginLocal.init(null, pluginContext);
+    pluginLocal.context = pluginContext;
   });
 
   it('should throw an error if the credentials are not well-formed', () => {
