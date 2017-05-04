@@ -15,7 +15,7 @@ describe('#delete', () => {
   });
 
   it('should return true if the user exists', () => {
-    return should(pluginLocal.delete(null, 'foo')).be.fulfilledWith(true);
+    return should(pluginLocal.delete(null, 'foo')).be.fulfilledWith({acknowledged: true});
   });
 
   it('should throw an error if the user doesn\'t exists', () => {
