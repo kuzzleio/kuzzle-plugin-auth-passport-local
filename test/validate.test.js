@@ -3,65 +3,36 @@ const
   rewire = require('rewire'),
   PluginLocal = rewire('../lib');
 
-describe('#validate', function () {
+describe('#validate', () => {
   let
     pluginLocal,
     pluginContext = rewire('./mock/pluginContext.mock.js'),
     repository = rewire('./mock/repository.mock.js');
 
-  beforeEach(function () {
+  beforeEach(() => {
     pluginLocal = new PluginLocal();
     pluginLocal.getUsersRepository = repository;
 
     pluginLocal.init(null, pluginContext);
   });
 
-  it('should throw an error if the credentials are not well-formed', function(done) {
-    pluginLocal.validate(null, {}, 'foo')
-      .then(() => {
-        done(new Error('Should not have succeeded'));
-      })
-      .catch(error => {
-        should(error.message).match('Username is a mandatory field for authentication strategy "local".');
-        done();
-      });
+  it('should throw an error if the credentials are not well-formed', () => {
+    return should(pluginLocal.validate(null, {}, 'foo', false)).be.rejectedWith('Username is a mandatory field for authentication strategy "local".');
   });
 
-  it('should throw an error if the userId is provided in the credentials', function(done) {
-    pluginLocal.validate(null, {userId: 'foo', username: 'bar'}, 'foo')
-      .then(() => {
-        done(new Error('Should not have succeeded'));
-      })
-      .catch(error => {
-        should(error.message).be.eql('userId cannot be specified in credentials.');
-        done();
-      });
+  it('should throw an error if the userId is provided in the credentials', () => {
+    return should(pluginLocal.validate(null, {userId: 'foo', username: 'bar'}, 'foo')).be.rejectedWith('userId cannot be specified in credentials.');
   });
 
-  it('should return true if the provided username equals the userId', function() {
-    pluginLocal.validate(null, {username:'foo', password:'bar'}, 'foo')
-      .then(result => {
-        should(result).be.True();
-      });
+  it('should return true if the provided username equals the userId', () => {
+    return should(pluginLocal.validate(null, {username:'foo', password:'bar'}, 'foo')).be.fulfilledWith(true);
   });
 
-  it('should return true if no user was found for the given userId', function() {
-    pluginLocal.validate(null, {username:'ghost', password:'bar'}, 'foo')
-      .then(result => {
-        should(result).be.True();
-      });
+  it('should return true if no user was found for the given userId', () => {
+    return should(pluginLocal.validate(null, {username:'ghost', password:'bar'}, 'foo')).be.fulfilledWith(true);
   });
 
-  it('should throw an error if the provided username differs from the userId', function(done) {
-    let unmatchingUsername = 'bar';
-
-    pluginLocal.validate(null, {username: unmatchingUsername, password: 'bar'}, 'foo')
-      .then(() => {
-        done(new Error('Should not have succeeded'));
-      })
-      .catch(error => {
-        should(error.message).be.eql(`Login "${unmatchingUsername}" is already used.`);
-        done();
-      });
+  it('should throw an error if the provided username differs from the userId', () => {
+    return should(pluginLocal.validate(null, {username: 'bar', password: 'bar'}, 'foo')).be.rejectedWith('Login "bar" is already used.');
   });
 });

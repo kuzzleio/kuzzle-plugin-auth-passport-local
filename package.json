@@ -34,7 +34,7 @@
     "mocha": "2.3.3",
     "nyc": "^10.1.2",
     "should": "11.1.0",
-    "sinon": "^1.17.7",
+    "sinon": "^2.0.0",
     "rewire": "2.5.2"
   },
   "homepage": "https://github.com/kuzzleio/kuzzle-plugin-auth-passport-local#readme",

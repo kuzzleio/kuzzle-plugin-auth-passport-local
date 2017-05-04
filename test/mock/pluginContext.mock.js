@@ -1,13 +1,17 @@
-let defaultError = function(message) { return {message: message}; };
+const
+  sinon = require('sinon'),
+  defaultError = sinon.stub().callsFake(message => {return {message}});
 
 module.exports = {
   constructors: {
-    Repository: function() {}
+    Repository: sinon.stub(),
+    Request: sinon.stub()
   },
   accessors: {
     storage: {
-      bootstrap: () => new Promise(() => {})
-    }
+      bootstrap: sinon.stub().returns(Promise.resolve())
+    },
+    execute: sinon.stub().returns(Promise.resolve())
   },
   errors: {
     BadRequestError: defaultError,
