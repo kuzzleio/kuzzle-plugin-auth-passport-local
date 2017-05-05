@@ -25,16 +25,16 @@ describe('#init', () => {
           authenticateOptions: {
             scope: []
           },
-          fields: ['login', 'password'],
-          verify: 'verify'
+          fields: ['login', 'password']
         },
         methods: {
-          exists: 'exists',
-          validate: 'validate',
           create: 'create',
-          update: 'update',
           delete: 'delete',
-          getInfo: 'getInfo'
+          exists: 'exists',
+          getInfo: 'getInfo',
+          update: 'update',
+          validate: 'validate',
+          verify: 'verify'
         }
       }
     });
