@@ -8,7 +8,7 @@
     "url": "git+https://github.com/kuzzleio/kuzzle-plugin-auth-passport-local.git"
   },
   "scripts": {
-    "test": "eslint lib && npm run unit-testing",
+    "test": "eslint lib test && npm run unit-testing",
     "unit-testing": "nyc --reporter=text-summary --reporter=lcov mocha"
   },
   "keywords": [

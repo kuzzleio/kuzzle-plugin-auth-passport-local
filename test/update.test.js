@@ -4,10 +4,10 @@ const
   sandbox = require('sinon').sandbox.create();
 
 describe('#update', () => {
-  let
-    pluginLocal,
+  const
     pluginContext = require('./mock/pluginContext.mock.js'),
     repository = require('./mock/repository.mock.js');
+  let pluginLocal;
 
   beforeEach(() => {
     sandbox.reset();
@@ -35,7 +35,7 @@ describe('#update', () => {
 
   it('it should update the user if the credentials are valid', () => {
     pluginLocal.getUsersRepository = sandbox.stub().returns({
-      get: userId => Promise.resolve({userId: userId}),
+      get: kuid => Promise.resolve({kuid}),
       search: () => Promise.resolve({total: 1, hits: [{_id: 'foo'}]}),
       update: () => Promise.resolve({_id: 'foo'})
     });

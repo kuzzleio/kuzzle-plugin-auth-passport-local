@@ -3,10 +3,8 @@ const
   PluginLocal = require('../lib');
 
 describe('#verify', () => {
-  let
-    pluginLocal,
-    pluginContext = require('./mock/pluginContext.mock.js'),
-    repository = require('./mock/repository.mock.js');
+  const repository = require('./mock/repository.mock.js');
+  let pluginLocal;
 
   beforeEach(() => {
     pluginLocal = new PluginLocal();
