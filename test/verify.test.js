@@ -3,12 +3,12 @@ const
   PluginLocal = require('../lib');
 
 describe('#verify', () => {
-  const repository = require('./mock/repository.mock.js');
+  const Repository = require('./mock/repository.mock.js');
   let pluginLocal;
 
   beforeEach(() => {
     pluginLocal = new PluginLocal();
-    pluginLocal.getUsersRepository = repository;
+    pluginLocal.userRepository = new Repository();
     pluginLocal.passwordManager = require('./mock/passwordManager.mock');
   });
 

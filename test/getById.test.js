@@ -2,7 +2,7 @@ const
   should = require('should'),
   PluginLocal = require('../lib');
 
-describe('#delete', () => {
+describe('#getById', () => {
   const
     pluginContext = require('./mock/pluginContext.mock.js'),
     Repository = require('./mock/repository.mock.js');
@@ -14,13 +14,13 @@ describe('#delete', () => {
     pluginLocal.context = pluginContext;
   });
 
-  it('should return true if the user exists', () => {
-    return should(pluginLocal.delete(null, 'foo')).be.fulfilled();
+  it('should return a user object if the user exists', () => {
+    return should(pluginLocal.getById(null, 'foo')).be.fulfilledWith({username: 'foo', kuid: 'foo'});
   });
 
   it('should throw an error if the user doesn\'t exists', () => {
-    pluginLocal.userRepository.search = () => Promise.resolve({total: 0, hits: []});
+    pluginLocal.userRepository.get = () => Promise.resolve(null);
 
-    return should(pluginLocal.delete(null, 'ghost')).be.rejectedWith({message: 'A strategy does not exist for this user.'});
+    return should(pluginLocal.getById(null, 'foo')).be.rejectedWith({message: 'A strategy does not exist for this username.'});
   });
 });

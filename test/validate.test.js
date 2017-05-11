@@ -5,12 +5,12 @@ const
 describe('#validate', () => {
   const
     pluginContext = require('./mock/pluginContext.mock.js'),
-    repository = require('./mock/repository.mock.js');
+    Repository = require('./mock/repository.mock.js');
   let pluginLocal;
 
   beforeEach(() => {
     pluginLocal = new PluginLocal();
-    pluginLocal.getUsersRepository = repository;
+    pluginLocal.userRepository = new Repository();
     pluginLocal.context = pluginContext;
   });
 

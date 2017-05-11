@@ -5,25 +5,20 @@ const
 describe('#create', () => {
   const
     pluginContext = require('./mock/pluginContext.mock.js'),
-    repository = require('./mock/repository.mock.js');
+    Repository = require('./mock/repository.mock.js');
   let pluginLocal;
 
   beforeEach(() => {
     pluginLocal = new PluginLocal();
-    pluginLocal.getUsersRepository = repository;
+    pluginLocal.userRepository = new Repository();
     pluginLocal.passwordManager = require('./mock/passwordManager.mock');
     pluginLocal.context = pluginContext;
   });
 
   it('should return a user object if the user doesn\'t exists', () => {
-    pluginLocal.getUsersRepository = () => {
-      return {
-        search: () => Promise.resolve({total: 0, hits: []}),
-        create: () => Promise.resolve({_id: 'foo'})
-      };
-    };
+    pluginLocal.userRepository.search = () => Promise.resolve({total: 0, hits: []});
 
-    return should(pluginLocal.create(null, {username: 'foo', password: 'bar'}, 'foo')).be.fulfilledWith({username: 'foo'});
+    return should(pluginLocal.create(null, {username: 'foo', password: 'bar'}, 'foo')).be.fulfilledWith({kuid:'someId', username: 'foo'});
   });
 
   it('should throw an error if the user already exists', () => {
