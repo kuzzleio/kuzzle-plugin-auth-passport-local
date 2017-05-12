@@ -15,7 +15,7 @@ describe('#validate', () => {
   });
 
   it('should throw an error if the credentials are not well-formed', () => {
-    return should(pluginLocal.validate(null, {}, 'foo', false)).be.rejectedWith('Username is a mandatory field for authentication strategy "local".');
+    return should(pluginLocal.validate(null, {}, 'foo', false)).be.rejectedWith('The field "username" is mandatory for authentication strategy "local".');
   });
 
   it('should throw an error if the kuid is provided in the credentials', () => {
