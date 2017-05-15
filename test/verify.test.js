@@ -20,14 +20,14 @@ describe('#verify', () => {
 
   it('should throw an error if no user was found for the given username', () => {
     return should(pluginLocal.verify(null, 'ghost', 'bar')).be.fulfilledWith({
-      kuid: false,
+      kuid: null,
       message: 'wrong username or password'
     });
   });
 
   it('should throw an error if the credentials are invalid', () => {
     return should(pluginLocal.verify(null, 'foo', 'rab')).be.fulfilledWith({
-      kuid: false,
+      kuid: null,
       message: 'wrong username or password'
     });
   });
