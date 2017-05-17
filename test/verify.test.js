@@ -13,14 +13,22 @@ describe('#verify', () => {
   });
 
   it('should return the username if the credentials are valid', () => {
-    return should(pluginLocal.verify(null, 'foo', 'bar')).be.fulfilledWith('foo');
+    return should(pluginLocal.verify(null, 'foo', 'bar')).be.fulfilledWith({
+      kuid: 'foo'
+    });
   });
 
   it('should throw an error if no user was found for the given username', () => {
-    return should(pluginLocal.verify(null, 'ghost', 'bar')).be.fulfilledWith({message: 'wrong username or password'});
+    return should(pluginLocal.verify(null, 'ghost', 'bar')).be.fulfilledWith({
+      kuid: null,
+      message: 'wrong username or password'
+    });
   });
 
   it('should throw an error if the credentials are invalid', () => {
-    return should(pluginLocal.verify(null, 'foo', 'rab')).be.fulfilledWith({message: 'wrong username or password'});
+    return should(pluginLocal.verify(null, 'foo', 'rab')).be.fulfilledWith({
+      kuid: null,
+      message: 'wrong username or password'
+    });
   });
 });

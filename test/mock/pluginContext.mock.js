@@ -16,6 +16,7 @@ module.exports = {
   },
   errors: {
     BadRequestError: defaultError,
-    ForbiddenError: defaultError
+    ForbiddenError: defaultError,
+    PreconditionError: defaultError
   }
 };
