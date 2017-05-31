@@ -24,7 +24,7 @@ describe('#init', () => {
           authenticateOptions: {
             scope: []
           },
-          fields: ['login', 'password']
+          fields: ['username', 'password']
         },
         methods: {
           create: 'create',
