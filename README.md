@@ -12,17 +12,12 @@ The default configuration is:
 
 ```json
 {
-  "secret": null,
   "algorithm": "sha256",
   "digest": "hex"
 }
 ```
 
-All the configurations are used to set the behavior of the password hash.
-If `secret` is `null`, it will be generated automatically when the plugin is initalized for the first time.
-To change this configuration please refer to the [Plugin reference](http://docs.kuzzle.io/plugin-reference/#custom-plugin-configuration).
-
-Note: thesecretparameter is only used if there is no salt already configured in the database. If that's the case and if users are already stored, make sure that it matches the previously used salt
+All the configurations are used to set the behavior of the password hash. `algorithm` must be either `sha256` or `sha512`.
 
 # Usage
 
