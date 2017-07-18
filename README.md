@@ -25,8 +25,10 @@ Just send following data to the **auth** controller:
 
 ```json
 {
+  "controller": "auth",
+  "action": "login",
+  "strategy": "local",
   "body": {
-    "strategy": "local",
     "username": "<username>",
     "password": "<password>"
   }
