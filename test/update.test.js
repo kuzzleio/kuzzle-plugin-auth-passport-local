@@ -14,9 +14,10 @@ describe('#update', () => {
     pluginLocal = new PluginLocal();
     pluginLocal.userRepository = new Repository();
     pluginLocal.passwordManager = {
-      encryptPassword: sandbox.stub().callsFake(password => password)
+      encryptPassword: sandbox.stub().callsFake(password => Promise.resolve(password))
     };
     pluginLocal.context = pluginContext;
+    pluginLocal.config = {};
   });
 
   it('should throw an error if the user doesn\'t exists', () => {
