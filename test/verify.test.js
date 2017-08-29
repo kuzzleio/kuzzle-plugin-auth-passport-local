@@ -1,5 +1,6 @@
 const
   should = require('should'),
+  sinon = require('sinon'),
   PluginLocal = require('../lib');
 
 describe('#verify', () => {
@@ -10,12 +11,23 @@ describe('#verify', () => {
     pluginLocal = new PluginLocal();
     pluginLocal.userRepository = new Repository();
     pluginLocal.passwordManager = require('./mock/passwordManager.mock');
+    pluginLocal.config = {algorithm: 'sha512', stretching: true};
   });
 
   it('should return the username if the credentials are valid', () => {
-    return should(pluginLocal.verify(null, 'foo', 'bar')).be.fulfilledWith({
-      kuid: 'foo'
-    });
+    sinon.stub(pluginLocal, 'update').returns(Promise.resolve());
+
+    return pluginLocal.verify(null, 'foo', 'bar')
+      .then(kuid => {
+        should(kuid).match({kuid: 'foo'});
+        should(pluginLocal.update.called).be.false();
+        return pluginLocal.verify(null, 'nostretching', 'password');
+      })
+      .then(kuid => {
+        should(kuid).match({kuid: 'nostretching'});
+        should(pluginLocal.update.calledOnce).be.true();
+        should(pluginLocal.update.calledWith(null, {password: 'password'}, 'nostretching')).be.true();
+      });
   });
 
   it('should throw an error if no user was found for the given username', () => {
@@ -23,6 +35,10 @@ describe('#verify', () => {
       kuid: null,
       message: 'wrong username or password'
     });
+  });
+
+  it('should throw an error if the user password has been encrypted with an unknown algorithm', () => {
+    return should(pluginLocal.verify(null, 'unknownAlgorithm', 'cheezburger')).be.rejectedWith('Unknown encryption algorithm');
   });
 
   it('should throw an error if the credentials are invalid', () => {
