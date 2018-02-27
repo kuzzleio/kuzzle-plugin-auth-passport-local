@@ -35,11 +35,11 @@ Just send following data to the **auth** controller:
 }
 ```
 
-See [Kuzzle API Documentation](http://kuzzleio.github.io/kuzzle-api-documentation/#auth-controller) for more details about Kuzzle authentication mechanism.
+See [Kuzzle API Documentation](http://docs.kuzzle.io/api-documentation/controller-auth/) for more details about Kuzzle authentication mechanism.
 
 # How to create a plugin
 
-See [Kuzzle documentation](https://github.com/kuzzleio/kuzzle/docs/plugins.md) about plugin for more information about how to create your own plugin.
+See [Kuzzle documentation](http://docs.kuzzle.io/plugins-reference/) about plugin for more information about how to create your own plugin.
 
 # About Kuzzle
 
