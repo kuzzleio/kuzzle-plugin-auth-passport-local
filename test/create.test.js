@@ -23,6 +23,6 @@ describe('#create', () => {
   });
 
   it('should throw an error if the user already exists', () => {
-    return should(pluginLocal.create(null, {username: 'foo', password: 'bar'}, 'foo')).be.rejected({message: 'A strategy already exists for this user.'});
+    return should(pluginLocal.create(null, {username: 'foo', password: 'bar'}, 'foo')).be.rejectedWith({message: 'A strategy already exists for this user.'});
   });
 });
