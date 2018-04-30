@@ -23,7 +23,7 @@ describe('#update', () => {
   it('should throw an error if the user doesn\'t exists', () => {
     pluginLocal.userRepository.search = () => Promise.resolve({total: 0, hits: []});
 
-    return should(pluginLocal.update(null, {username: 'foo', password: 'bar'}, 'foo')).be.rejectedWith('A strategy does not exist for this user.');
+    return should(pluginLocal.update(null, {username: 'foo', password: 'bar'}, 'foo')).be.rejectedWith('A strategy does not exist for user "foo".');
   });
 
   it('should update the user and its username if the credentials are valid', () => {
