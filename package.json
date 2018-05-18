@@ -1,6 +1,6 @@
 {
   "name": "kuzzle-plugin-auth-passport-local",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "description": "Kuzzle plugin to log-in users",
   "main": "./lib/index.js",
   "repository": {
