@@ -21,6 +21,6 @@ describe('#delete', () => {
   it('should throw an error if the user doesn\'t exists', () => {
     pluginLocal.userRepository.search = () => Promise.resolve({total: 0, hits: []});
 
-    return should(pluginLocal.delete(null, 'ghost')).be.rejectedWith({message: 'A strategy does not exist for this user.'});
+    return should(pluginLocal.delete(null, 'ghost')).be.rejectedWith({message: 'A strategy does not exist for user "ghost".'});
   });
 });
