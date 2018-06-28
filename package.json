@@ -30,11 +30,11 @@
     "passport-local": "1.0.0"
   },
   "devDependencies": {
-    "eslint": "4.19.1",
-    "mocha": "5.1.1",
-    "nyc": "^11.8.0",
+    "eslint": "5.0.1",
+    "mocha": "5.2.0",
+    "nyc": "^12.0.2",
     "should": "13.2.1",
-    "sinon": "^5.0.7"
+    "sinon": "^6.0.1"
   },
   "homepage": "https://github.com/kuzzleio/kuzzle-plugin-auth-passport-local#readme",
   "maintainers": [
