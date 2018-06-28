@@ -1,10 +1,11 @@
 const
   should = require('should'),
-  PluginLocal = require('../lib');
+  PluginLocal = require('../lib'),
+  PluginContext = require('./mock/pluginContext.mock.js');
 
 describe('#create', () => {
   const
-    pluginContext = require('./mock/pluginContext.mock.js'),
+    pluginContext = new PluginContext(),
     Repository = require('./mock/repository.mock.js');
   let pluginLocal;
 
