@@ -3,20 +3,25 @@ const
   defaultError = sinon.stub().callsFake(message => ({message})),
   repository = require('./repository.mock');
 
-module.exports = {
-  constructors: {
-    Repository: repository,
-    Request: sinon.stub()
-  },
-  accessors: {
-    storage: {
-      bootstrap: sinon.stub().returns(Promise.resolve())
+module.exports = function () {
+  return {
+    constructors: {
+      Repository: repository,
+      Request: sinon.stub()
     },
-    execute: sinon.stub().returns(Promise.resolve())
-  },
-  errors: {
-    BadRequestError: defaultError,
-    ForbiddenError: defaultError,
-    PreconditionError: defaultError
-  }
+    config: {
+      version: '1.4.0'
+    },
+    accessors: {
+      storage: {
+        bootstrap: sinon.stub().returns(Promise.resolve())
+      },
+      execute: sinon.stub().returns(Promise.resolve())
+    },
+    errors: {
+      BadRequestError: defaultError,
+      ForbiddenError: defaultError,
+      PreconditionError: defaultError
+    }
+  };
 };
