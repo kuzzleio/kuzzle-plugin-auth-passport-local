@@ -12,7 +12,8 @@ module.exports = function () {
           algorithm: 'can I haz cheezburger?',
           userPassword: 'cheezburger',
           userSalt: 'sugar',
-          kuid
+          kuid,
+          isHash: false
         });
       }
 
@@ -23,7 +24,20 @@ module.exports = function () {
           stretching: false,
           userPassword: 'c1d0e06998305903ac76f589bbd6d4b61a670ba6',
           userSalt: 'salt',
-          kuid
+          kuid,
+          isHash: false
+        });
+      }
+
+      if (kuid === 'withHash') {
+        return Promise.resolve({
+          _id: 'reallyWeak',
+          algorithm: 'sha1',
+          stretching: false,
+          userPassword: '6318553899daae2941718c02508aeee938af1a1c',
+          userSalt: '',
+          kuid,
+          isHash: true
         });
       }
 
@@ -33,7 +47,8 @@ module.exports = function () {
         userSalt: 'someSalt',
         algorithm: 'sha512',
         stretching: true,
-        kuid
+        kuid,
+        isHash: false
       });
     },
     search: () => Promise.resolve({total: 1, hits: [{_id: 'foo2', kuid: 'someId'}]}),

@@ -12,8 +12,10 @@ The default configuration is:
 
 ```json
 {
-  "algorithm": "sha256",
-  "digest": "hex"
+  "algorithm": "sha512",
+  "stetching": true,
+  "digest": "hex",
+  "isHash": false
 }
 ```
 
