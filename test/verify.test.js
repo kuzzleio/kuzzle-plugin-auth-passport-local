@@ -11,7 +11,7 @@ describe('#verify', () => {
     pluginLocal = new PluginLocal();
     pluginLocal.userRepository = new Repository();
     pluginLocal.passwordManager = require('./mock/passwordManager.mock');
-    pluginLocal.config = {algorithm: 'sha512', stretching: true, isHash: false};
+    pluginLocal.config = {algorithm: 'sha512', stretching: true, encryption: 'hmac'};
   });
 
   it('should return the username if the credentials are valid', () => {

@@ -13,7 +13,7 @@ module.exports = function () {
           userPassword: 'cheezburger',
           userSalt: 'sugar',
           kuid,
-          isHash: false
+          encryption: 'hmac'
         });
       }
 
@@ -25,7 +25,7 @@ module.exports = function () {
           userPassword: 'c1d0e06998305903ac76f589bbd6d4b61a670ba6',
           userSalt: 'salt',
           kuid,
-          isHash: false
+          encryption: 'hmac'
         });
       }
 
@@ -37,7 +37,7 @@ module.exports = function () {
           userPassword: '6318553899daae2941718c02508aeee938af1a1c',
           userSalt: '',
           kuid,
-          isHash: true
+          encryption: 'hash'
         });
       }
 
@@ -49,7 +49,7 @@ module.exports = function () {
           userPassword: '7adea9631925620e692b435c54fecdc5e962416d',
           userSalt: 'salt',
           kuid,
-          isHash: true
+          encryption: 'hash'
         });
       }
 
@@ -59,8 +59,7 @@ module.exports = function () {
         userSalt: 'someSalt',
         algorithm: 'sha512',
         stretching: true,
-        kuid,
-        isHash: false
+        kuid
       });
     },
     search: () => Promise.resolve({total: 1, hits: [{_id: 'foo2', kuid: 'someId'}]}),
