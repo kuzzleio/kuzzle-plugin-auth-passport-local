@@ -33,6 +33,12 @@ describe('#verify', () => {
         should(kuid).match({kuid: 'withHash'});
         should(pluginLocal.update.calledTwice).be.true();
         should(pluginLocal.update.secondCall.calledWith(null, {password: 'hashed'}, 'withHash')).be.true();
+        return pluginLocal.verify(null, 'withSaltedHash', 'saltedHash');
+      })
+      .then(kuid => {
+        should(kuid).match({kuid: 'withSaltedHash'});
+        should(pluginLocal.update.calledThrice).be.true();
+        should(pluginLocal.update.thirdCall.calledWith(null, {password: 'saltedHash'}, 'withSaltedHash')).be.true();
       });
   });
 

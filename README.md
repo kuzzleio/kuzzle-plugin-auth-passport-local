@@ -13,7 +13,7 @@ The default and recommended configuration is:
 ```json
 {
   "algorithm": "sha512",
-  "stetching": true,
+  "stretching": true,
   "digest": "hex",
   "isHash": false
 }
