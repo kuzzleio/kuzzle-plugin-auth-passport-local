@@ -8,7 +8,7 @@ By default, this plugin is already installed in Kuzzle.
 
 # Configuration
 
-The default configuration is:
+The default and recommended configuration is:
 
 ```json
 {
@@ -19,7 +19,12 @@ The default configuration is:
 }
 ```
 
-All the configurations are used to set the behavior of the password hash. `algorithm` must be either `sha256` or `sha512`.
+All the configurations are used to set the behavior of the password hash.
+
+* `algorithm` must be either `sha256` or `sha512`.
+* `stretching` must be a boolean and controls if the password is stretched or not.
+* `digest` describes how the hashed password is stored in the persisting layer. See other possible values in the [node.js documentation](https://nodejs.org/api/buffer.html#buffer_buf_tostring_encoding_start_end)
+* `isHash` determines whether the hashing algorithm uses `crypto.createHash` (`true`) or `crypto.createHmac` (`false`). For more details, see the [node.js documentation](https://nodejs.org/api/crypto.html)
 
 # Usage
 
