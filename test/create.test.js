@@ -14,7 +14,11 @@ describe('#create', () => {
     pluginLocal.userRepository = new Repository();
     pluginLocal.passwordManager = require('./mock/passwordManager.mock');
     pluginLocal.context = pluginContext;
-    pluginLocal.config = {};
+    pluginLocal.config = {
+      algorithm: 'sha512',
+      digest: 'hex',
+      encryption: 'hmac'
+    };
   });
 
   it('should return a user object if the user doesn\'t exists', () => {
