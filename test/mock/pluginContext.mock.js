@@ -21,6 +21,7 @@ module.exports = function () {
     errors: {
       BadRequestError: defaultError,
       ForbiddenError: defaultError,
+      PluginImplementationError: defaultError,
       PreconditionError: defaultError
     }
   };
