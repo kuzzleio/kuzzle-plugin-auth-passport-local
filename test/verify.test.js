@@ -11,7 +11,7 @@ describe('#verify', () => {
     pluginLocal = new PluginLocal();
     pluginLocal.userRepository = new Repository();
     pluginLocal.passwordManager = require('./mock/passwordManager.mock');
-    pluginLocal.config = {algorithm: 'sha512', stretching: true};
+    pluginLocal.config = {algorithm: 'sha512', stretching: true, encryption: 'hmac'};
   });
 
   it('should return the username if the credentials are valid', () => {
@@ -27,6 +27,24 @@ describe('#verify', () => {
         should(kuid).match({kuid: 'nostretching'});
         should(pluginLocal.update.calledOnce).be.true();
         should(pluginLocal.update.calledWith(null, {password: 'password'}, 'nostretching')).be.true();
+        return pluginLocal.verify(null, 'withHash', 'hashed');
+      })
+      .then(kuid => {
+        should(kuid).match({kuid: 'withHash'});
+        should(pluginLocal.update.calledTwice).be.true();
+        should(pluginLocal.update.secondCall.calledWith(null, {password: 'hashed'}, 'withHash')).be.true();
+        return pluginLocal.verify(null, 'withSaltedHash', 'saltedHash');
+      })
+      .then(kuid => {
+        should(kuid).match({kuid: 'withSaltedHash'});
+        should(pluginLocal.update.calledThrice).be.true();
+        should(pluginLocal.update.thirdCall.calledWith(null, {password: 'saltedHash'}, 'withSaltedHash')).be.true();
+        return pluginLocal.verify(null, 'withoutEncryption', 'bar');
+      })
+      .then(kuid => {
+        should(kuid).match({kuid: 'withoutEncryption'});
+        should(pluginLocal.update.callCount).be.eql(4);
+        should(pluginLocal.update.getCall(3).calledWith(null, {password: 'bar'}, 'withoutEncryption')).be.true();
       });
   });
 

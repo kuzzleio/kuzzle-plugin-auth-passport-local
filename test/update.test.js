@@ -1,7 +1,7 @@
 const
   should = require('should'),
   PluginLocal = require('../lib'),
-  sandbox = require('sinon').sandbox.create(),
+  sandbox = require('sinon').createSandbox(),
   PluginContext = require('./mock/pluginContext.mock.js');
 
 describe('#update', () => {
