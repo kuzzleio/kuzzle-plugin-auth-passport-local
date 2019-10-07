@@ -6,6 +6,13 @@ This plugin provides a local authentication with username/password with [passpor
 
 By default, this plugin is already installed in Kuzzle.
 
+## Compatibility matrice
+
+| Kuzzle Version | Plugin Version |
+| -------------- | -------------- |
+| 1.x.x          | 5.x.x          | 
+| 2.x.x          | 6.x.x          | 
+
 # Configuration
 
 The default and recommended configuration is:
@@ -42,15 +49,15 @@ Just send following data to the **auth** controller:
 }
 ```
 
-See [Kuzzle API Documentation](http://docs.kuzzle.io/api-documentation/controller-auth/) for more details about Kuzzle authentication mechanism.
+See [Kuzzle user authentication documentation](https://docs.kuzzle.io/core/2/guides/essentials/user-authentication/) for more details about Kuzzle authentication mechanism.
 
 # How to create a plugin
 
-See [Kuzzle documentation](http://docs.kuzzle.io/plugins-reference/) about plugin for more information about how to create your own plugin.
+See [Kuzzle plugin documentation](https://docs.kuzzle.io/core/2/plugins/) about plugin for more information about how to create your own plugin.
 
 # About Kuzzle
 
-For UI and linked objects developers, [Kuzzle](https://github.com/kuzzleio/kuzzle) is an open-source solution that handles all the data management
+For UI and IoT developers, [Kuzzle](https://github.com/kuzzleio/kuzzle) is an open-source solution that handles all the data management
 (CRUD, real-time storage, search, high-level features, etc).
 
-[Kuzzle](https://github.com/kuzzleio/kuzzle) features are accessible through a secured API. It can be used through a large choice of protocols such as REST, Websocket or Message Queuing protocols.
+[Kuzzle](https://github.com/kuzzleio/kuzzle) features are accessible through a secured API. It can be used through a large choice of protocols such as HTTP, Websocket or MQTT.

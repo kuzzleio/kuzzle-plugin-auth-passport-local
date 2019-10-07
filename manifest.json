@@ -1,4 +1,4 @@
 {
   "name": "kuzzle-plugin-auth-passport-local",
-  "kuzzleVersion": ">=1.0.0 <3.0.0"
+  "kuzzleVersion": ">=2.0.0 <3.0.0"
 }
