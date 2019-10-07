@@ -10,8 +10,8 @@ By default, this plugin is already installed in Kuzzle.
 
 | Kuzzle Version | Plugin Version |
 | -------------- | -------------- |
-| 1.x.x          | 4.x.x          | 
-| 2.x.x          | 5.x.x          | 
+| 1.x.x          | 5.x.x          | 
+| 2.x.x          | 6.x.x          | 
 
 # Configuration
 
