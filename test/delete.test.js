@@ -48,6 +48,13 @@ describe('#delete', () => {
         .rejectedWith('Cannot update credentials: password required.');
     });
 
+    it('should accept if no password is provided but the request is from the security controller', () => {
+      request.input.args.password = '';
+      request.input.controller = 'security';
+      return should(pluginLocal.delete(request, {username: 'foo', 'password': 'bar'}))
+        .fulfilled();
+    });
+
     it('should reject if the password is invalid', () => {
       request.input.args.password = 'ohnoes';
       pluginLocal.passwordManager.checkPassword.returns(false);
