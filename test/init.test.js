@@ -14,10 +14,10 @@ describe('#init', () => {
     pluginLocal.context = pluginContext;
   });
 
-  it('should initialize a \'local\' strategy', () => {
+  it('should initialize a \'local\' strategy', async () => {
     should(pluginLocal.strategies).not.be.ok();
 
-    pluginLocal.init(null, pluginContext);
+    await pluginLocal.init(null, pluginContext);
 
     should(pluginLocal.strategies).be.Object().and.match({
       local: {
@@ -42,11 +42,11 @@ describe('#init', () => {
     });
   });
 
-  it('should use a "constructor" instead if Kuzzle version is < 1.4.0', () => {
+  it('should use a "constructor" instead if Kuzzle version is < 1.4.0', async () => {
     should(pluginLocal.strategies).not.be.ok();
     pluginContext.config.version = '1.3.9999';
 
-    pluginLocal.init(null, pluginContext);
+    await pluginLocal.init(null, pluginContext);
 
     should(pluginLocal.strategies).be.Object().and.match({
       local: {
@@ -71,8 +71,8 @@ describe('#init', () => {
     });
   });
 
-  it('should have a getUserRepository method returning an object', function() {
-    pluginLocal.init(null, pluginContext);
+  it('should have a getUserRepository method returning an object', async () => {
+    await pluginLocal.init(null, pluginContext);
 
     should(pluginLocal.getUsersRepository).be.a.Function();
     should(pluginLocal.getUsersRepository()).be.an.Object();
