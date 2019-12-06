@@ -1,10 +1,7 @@
 language: node_js
-
 node_js: 10
-
 script:
-  - npm test
-
+- npm test
 notifications:
   webhooks:
     urls:
@@ -13,12 +10,11 @@ notifications:
     on_failure: always
     on_start: never
   email: false
-
 deploy:
   provider: npm
   email: support@kuzzle.io
   api_key:
-    secure: tfUTsiuiuULMGOev5/q8zJ53uDIrnDTpRf95RTW++1O/2vf+87ys553g1t/XiE2Kbz3GullHhe0Sfdan7sO3kYOirMNfD6yp/emMSon3LaO+b1TrrVMcP4aJdrp+PyfO7OX7eIHobuq0f+r1JryQUfhSmTw6DOwsmHGMbsrJGh2AMSbPvfvqKcXUoOrRh0qfkyztUcAioVsOlbNnsgtyhbCV+Wh4p6n8n0gxr3MtrHBhHsueNcUnYWFx3ZXIaYA+94ICgN0X0jDnxMgA/6YByE/YbOGjIAEaikx4gnV6CzmNRRtGtEA1D+j0OvilGwCB3CmyEzKvqabazXTUKCk7x0lSVZdLX47x0eES99Q+tMoWxc76WTPY8RDgWRtpu82PO6qHqNf8ZZp4AiAFL8FK+H/Y9D9Kfsac/XGsrMOjPqY0uBrPZhMqzEKhuB+3XrzrKRHktMav6/mM3ul5DikGcnBY7jtk9Urx+1/cL7IGjibmg9jSZB+2TD6Crtj7kJuu76CxME+i0UZ1G3fsSzlH8Cm57tZi62GPhVmtXC3KutolSRSYuyj1MO/bWKN/2V4EgHa3MPNiAkV0Tm1DnwvNkIyvzcrpX+vc0iSJWMnkywyNx0KcCFAUqcR9XFKLWc4gJlx/7l92NzvAEe8eId2m1VuCvr+gGdcYrBoSm+4oVD0=
+    secure: kIQ6NmrMoy6/jtkDiYlikBxW7eXs1Cl2bnKTWDWcj+82Pox+oWBMiqjFdQQPdlga2FcKtSzAKOomgb7rD65oT3qAf9TroyXjkxLgXhu5ISReTT6NIHRiDWfhO2rRM8OPpT991ULRWCzXB+SekvL3kT4uvkJ9s7eX5Ib6sgBRvyJoy84YueGB4OhEIg1GaA5c16JZzgDSo+XKoyNdQWkRL07MSWaFHAajBFx2ZOF1VB33dvy12z5CCfTuclUfxH/UjzP7oge5JvqtZfEY2Vy1Jbvrw4vhPypchNpyXCvLjQhN6KIfitiUiBoGJGUM7I4NzzWWOZVsVr5aVQwvHvMOflrQ1KAISjYRfWsTEaV2K/iVi68/1HJSEvRlpOFYMeur8G8BCzG1vrWkCY8K17Bt8MuY8sKTl9aBfWFbrG32VvB3qSGVrSTOznoB76utaMgdWo0rnreykFKeuxuT7mAEyEtlwgXbWVaKHOxAT3mMHmq/WeIL+uf/hmPA82CgrZT7KmIWfuaEL6S4uDhejdAo2jPfY03LZ+5YnVoTmGQVC2k8CrCTtNNZl/4z3Gvft3fsaJsazTFZEvtY407243APuX81davhXYrmuf9j9U3z7DvvOMi4PQoS9EycCLfT6ixOBpbUwug23Fm92HvyCEomghWdisyPwiHpGUtqZb8XGYU=
   on:
     repo: kuzzleio/kuzzle-plugin-auth-passport-local
     branch: master
