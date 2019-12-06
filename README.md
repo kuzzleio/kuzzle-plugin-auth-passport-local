@@ -15,14 +15,15 @@ By default, this plugin is already installed in Kuzzle.
 
 # Configuration
 
-The default and recommended configuration is:
+The default configuration is as follow:
 
 ```json
 {
   "algorithm": "sha512",
   "stretching": true,
   "digest": "hex",
-  "encryption": "hmac"
+  "encryption": "hmac",
+  "requirePassword": false
 }
 ```
 
@@ -32,10 +33,13 @@ All the configurations are used to set the behavior of the password hash.
 * `stretching` must be a boolean and controls if the password is stretched or not.
 * `digest` describes how the hashed password is stored in the persisting layer. See other possible values in the [node.js documentation](https://nodejs.org/api/buffer.html#buffer_buf_tostring_encoding_start_end)
 * `encryption` determines whether the hashing algorithm uses `crypto.createHash` (`hash`) or `crypto.createHmac` (`hmac`). For more details, see the [node.js documentation](https://nodejs.org/api/crypto.html)
+* `requirePassword` must be a boolean. If true, this makes this plugin refuse any credentials update or deletion, unless the currently valid password is provided or the change is performed via the `security` controller
 
 # Usage
 
-Just send following data to the **auth** controller:
+This simple plugin associates a password to a custom username.
+
+To login using Kuzzle's API:
 
 ```json
 {
@@ -47,6 +51,35 @@ Just send following data to the **auth** controller:
     "password": "<password>"
   }
 }
+```
+
+By default there is no restriction to update or delete credentials (provided the current user is logged in).
+
+However, if the option `requirePassword` is set to true, this plugin will refuse to update credentials unless either the currently valid password is also provided, or the change is performed via the `security` controller.
+
+To provide the password parameter, add it at the root level of the provided JSON payload.
+
+Example (non-HTTP protocol):
+
+```js
+{
+  "controller": "auth",
+  "action": "updateMyCredentials",
+  "strategy": "local",
+  "jwt": "<currently valid token>",
+  "password": "<currently valid password>",
+  "body": {
+    // just skip the fields you don't want to update
+    "username": "<new username>",
+    "password": "<new password>"
+  },
+}
+```
+
+Using HTTP, the currently valid password must be put in the querystring:
+
+```
+https://kuzzle:7512/credentials/local/_me/_update?password=<currently valid password>
 ```
 
 See [Kuzzle user authentication documentation](https://docs.kuzzle.io/core/2/guides/essentials/user-authentication/) for more details about Kuzzle authentication mechanism.

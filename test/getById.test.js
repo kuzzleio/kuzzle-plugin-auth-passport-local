@@ -22,6 +22,6 @@ describe('#getById', () => {
   it('should throw an error if the user doesn\'t exists', () => {
     pluginLocal.userRepository.get = () => Promise.resolve(null);
 
-    return should(pluginLocal.getById(null, 'foo')).be.rejectedWith({message: 'A strategy does not exist for username "foo".'});
+    return should(pluginLocal.getById(null, 'foo')).be.rejectedWith({message: 'No credentials found for username "foo".'});
   });
 });
