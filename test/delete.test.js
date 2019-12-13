@@ -34,7 +34,7 @@ describe('#delete', () => {
       pluginLocal.userRepository.search = () => Promise.resolve({total: 1, hits: [{_id: 'foo', kuid: 'someId'}]});
       pluginLocal.config.requirePassword = true;
       pluginLocal.passwordManager = {checkPassword: sinon.stub().returns(true)};
-      request = {input: {args: {}}};
+      request = {input: {args: {}, controller: 'auth'}};
     });
 
     it('should reject if no password is provided', () => {
@@ -48,9 +48,9 @@ describe('#delete', () => {
         .rejectedWith('Cannot update credentials: password required.');
     });
 
-    it('should accept if no password is provided but the request is from the security controller', () => {
+    it('should accept if no password is provided but the request is not from the auth controller', () => {
       request.input.args.password = '';
-      request.input.controller = 'security';
+      request.input.controller = null;
       return should(pluginLocal.delete(request, {username: 'foo', 'password': 'bar'}))
         .fulfilled();
     });
