@@ -32,6 +32,7 @@
     "semver": "^6.3.0"
   },
   "devDependencies": {
+    "debug": "^4.1.1",
     "eslint": "^6.7.2",
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",

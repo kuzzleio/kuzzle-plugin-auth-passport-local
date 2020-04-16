@@ -34,11 +34,12 @@ services:
       - "9229:9229"
       - "7512:7512"
     environment:
-      - kuzzle_services__storageEngine__client__node=http://elasticsearch:9200
-      - kuzzle_services__internalCache__node__host=redis
-      - kuzzle_services__memoryStorage__node__host=redis
-      - NODE_ENV=development
-      - DEBUG=kuzzle:plugins
+      kuzzle_services__storageEngine__client__node: http://elasticsearch:9200
+      kuzzle_services__internalCache__node__host: redis
+      kuzzle_services__memoryStorage__node__host: redis
+      NODE_ENV: development
+      DEBUG: kuzzle-plugin-auth-passport-local
+      DEBUG_COLORS: "true"
 
   redis:
     image: redis:5
