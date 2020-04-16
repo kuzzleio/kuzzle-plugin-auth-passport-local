@@ -43,7 +43,7 @@
     "no-unused-expressions": 2,
     "no-useless-call": 2,
     "no-with": 2,
-    "quotes": [2, "single"],
+    "quotes": [2, "single", {"allowTemplateLiterals": true}],
     "require-atomic-updates": 0,
     "semi": [2, "always"],
     "keyword-spacing": 2,

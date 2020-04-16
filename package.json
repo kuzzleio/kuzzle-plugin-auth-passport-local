@@ -25,6 +25,8 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
+    "jsonwebtoken": "^8.5.1",
+    "ms": "^2.1.2",
     "passport": "0.4.0",
     "passport-local": "1.0.0",
     "semver": "^6.3.0"

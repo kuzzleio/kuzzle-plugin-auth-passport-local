@@ -3,7 +3,7 @@ const
   defaultError = sinon.stub().callsFake(message => ({message})),
   repository = require('./repository.mock');
 
-module.exports = function () {
+module.exports = () => {
   return {
     constructors: {
       Repository: repository,
