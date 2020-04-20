@@ -1,28 +1,36 @@
 const
   sinon = require('sinon'),
-  defaultError = sinon.stub().callsFake(message => ({message})),
-  repository = require('./repository.mock');
+  { Request, errors } = require('kuzzle-common-objects');
 
-module.exports = () => {
+module.exports = function PluginContext() {
   return {
-    constructors: {
-      Repository: repository,
-      Request: sinon.stub()
-    },
-    config: {
-      version: '1.4.0'
-    },
     accessors: {
+      sdk: {
+        security: {
+          getUser: sinon.stub().callsFake(async kuid => {
+            return {
+              _id: kuid,
+              content: {
+                profileIds: ['profile1', 'profile2']
+              }
+            };
+          })
+        }
+      },
       storage: {
         bootstrap: sinon.stub().returns(Promise.resolve())
       },
       execute: sinon.stub().returns(Promise.resolve())
     },
-    errors: {
-      BadRequestError: defaultError,
-      ForbiddenError: defaultError,
-      PluginImplementationError: defaultError,
-      PreconditionError: defaultError
-    }
+    config: {
+      version: '1.4.0'
+    },
+    constructors: {
+      Repository: function () {
+        this.create = sinon.stub().resolves();
+      },
+      Request
+    },
+    errors
   };
 };

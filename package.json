@@ -34,9 +34,11 @@
   "devDependencies": {
     "debug": "^4.1.1",
     "eslint": "^6.8.0",
+    "kuzzle-common-objects": "^4.1.1",
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",
     "should": "13.2.3",
+    "should-sinon": "0.0.6",
     "sinon": "^7.5.0"
   },
   "homepage": "https://github.com/kuzzleio/kuzzle-plugin-auth-passport-local#readme",

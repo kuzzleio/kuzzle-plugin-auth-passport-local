@@ -5,36 +5,38 @@ const
   PluginContext = require('./mock/pluginContext.mock.js');
 
 describe('#delete', () => {
-  const
-    pluginContext = new PluginContext(),
-    Repository = require('./mock/repository.mock.js');
-  let pluginLocal;
+  const pluginContext = new PluginContext();
+  let
+    pluginLocal,
+    request;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     pluginLocal = new PluginLocal();
-    pluginLocal.userRepository = new Repository();
-    pluginLocal.context = pluginContext;
-    pluginLocal.config = { requirePassword: false };
+    await pluginLocal.init({
+      requirePassword: false
+    }, pluginContext);
+    pluginLocal.userRepository = new (require('./mock/getUserRepository.mock')(pluginLocal))();
+
+    request = new pluginContext.constructors.Request({});
   });
 
-  it('should return true if the user exists', () => {
-    return should(pluginLocal.delete(null, 'foo')).be.fulfilled();
+  it('should return true if the user exists', async () => {
+    const response = await pluginLocal.delete(request, 'foo');
+
+    should(response).be.true();
   });
 
   it('should throw an error if the user doesn\'t exists', () => {
-    pluginLocal.userRepository.search = () => Promise.resolve({total: 0, hits: []});
+    pluginLocal.userRepository.search.resolves({total: 0, hits: []});
 
-    return should(pluginLocal.delete(null, 'ghost')).be.rejectedWith({message: 'No credentials found for user "ghost".'});
+    return should(pluginLocal.delete(request, 'ghost'))
+      .be.rejectedWith({message: 'No credentials found for user "ghost".'});
   });
 
   describe('#requirePassword', () => {
-    let request;
-
     beforeEach(() => {
-      pluginLocal.userRepository.search = () => Promise.resolve({total: 1, hits: [{_id: 'foo', kuid: 'someId'}]});
       pluginLocal.config.requirePassword = true;
       pluginLocal.passwordManager = {checkPassword: sinon.stub().returns(true)};
-      request = {input: {args: {}}};
     });
 
     it('should reject if no password is provided', () => {
