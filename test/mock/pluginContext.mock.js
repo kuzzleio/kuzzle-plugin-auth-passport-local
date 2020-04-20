@@ -18,9 +18,9 @@ module.exports = function PluginContext() {
         }
       },
       storage: {
-        bootstrap: sinon.stub().returns(Promise.resolve())
+        bootstrap: sinon.stub().resolves()
       },
-      execute: sinon.stub().returns(Promise.resolve())
+      execute: sinon.stub().resolves({result: true})
     },
     config: {
       version: '1.4.0'
@@ -28,6 +28,7 @@ module.exports = function PluginContext() {
     constructors: {
       Repository: function () {
         this.create = sinon.stub().resolves();
+        this.get = sinon.stub().resolves();
       },
       Request
     },
