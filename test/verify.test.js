@@ -1,6 +1,7 @@
 const
   should = require('should'),
   sinon = require('sinon'),
+  jsonwebtoken = require('jsonwebtoken'),
   PluginLocal = require('../lib'),
   PluginContext = require('./mock/pluginContext.mock.js');
 
@@ -78,5 +79,104 @@ describe('#verify', () => {
       kuid: null,
       message: 'wrong username or password'
     });
+  });
+
+  describe('#policies - expires after', () => {
+    let delay = 0;
+
+    beforeEach(async () => {
+      pluginLocal.config.passwordPolicies = [
+        {
+          appliesTo: '*',
+          expiresAfter: '42m'
+        }
+      ];
+
+      const user = await pluginLocal.getUsersRepository().get('foo');
+      pluginLocal.userRepository.get = async () => {
+        user._kuzzle_info.updatedAt = Date.now() - delay;
+        return user;
+      };
+    });
+
+    it('should allow login in if the password is not expired', async () => {
+      delay = 1000 * 60 * 41;
+
+      const response = await pluginLocal.verify(request, 'foo', 'bar');
+      should(response).eql({kuid: 'foo'});
+    });
+
+    it('should return a null kuid if the password is expired', async () => {
+      delay = 1000 * 60 * 42 + 1;
+
+      const response = await pluginLocal.verify(request, 'foo', 'bar');
+
+      const err = new pluginLocal.errors.ExpiredPasswordError();
+
+      should(response).match({
+        kuid: null,
+        statusCode: 403,
+        id: err.id,
+        code: err.code
+      });
+
+      should(
+        jsonwebtoken.verify(
+          response.resetToken,
+          pluginLocal.config.resetPasswordSecret
+        ).kuid
+      ).eql('foo');
+    });
+  });
+
+  describe('#policies - must change password', () => {
+    let who;
+
+    beforeEach(async () => {
+      pluginLocal.config.passwordPolicies = [
+        {
+          appliesTo: '*',
+          mustChangePasswordIfSetByAdmin: true
+        }
+      ];
+
+      const user = await pluginLocal.userRepository.get('foo');
+      who = user.kuid;
+
+      pluginLocal.userRepository.get = async () => {
+        user.updater = who;
+        return user;
+      };
+    });
+
+    it('should allow login in if the password was self-updated', async () => {
+      const response = await pluginLocal.verify(request, 'foo', 'bar');
+
+      should(response).eql({kuid: 'foo'});
+    });
+
+    it('should return a null kuid if the password must be changed', async () => {
+      who = 'someone else';
+
+      const response = await pluginLocal.verify(request, 'foo', 'bar');
+
+      const err = new pluginLocal.errors.MustChangePasswordError();
+
+      should(response).match({
+        kuid: null,
+        statusCode: 401,
+        id: err.id,
+        code: err.code
+      });
+
+      should(
+        jsonwebtoken.verify(
+          response.resetToken,
+          pluginLocal.config.resetPasswordSecret
+        ).kuid
+      ).eql('foo');
+
+    });
+
   });
 });

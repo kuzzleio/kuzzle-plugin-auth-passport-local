@@ -89,7 +89,18 @@ module.exports = plugin => {
     }
 
     fromDTO (dto) {
-      return new User(dto);
+      const user = new User(dto);
+
+      if (!user._kuzzle_info) {
+        user._kuzzle_info = {
+          author: null,
+          createdAt: Date.now() - 1000 * 3600 * 24 * 30,
+          updatedAt: Date.now() - 1000 * 3600 * 24 * 15,
+          updater: user.kuid || null
+        };
+      }
+
+      return user;
     }
   }
 

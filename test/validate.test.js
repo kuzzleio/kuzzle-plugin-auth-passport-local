@@ -44,4 +44,217 @@ describe('#validate', () => {
   it('should throw an error if the provided username differs from the kuid', () => {
     return should(pluginLocal.validate(null, {username: 'bar', password: 'bar'}, 'foo')).be.rejectedWith('Login "bar" is already used.');
   });
+
+  describe('#policies - forbid login in password', () => {
+    beforeEach(() => {
+      pluginLocal.config.passwordPolicies = [
+        {
+          appliesTo: '*',
+          forbidLoginInPassword: true
+        }
+      ];
+    });
+
+    it('should allow user creation if password does not contain login', async () => {
+      pluginLocal.userRepository.get = async () => null;
+      pluginLocal.userRepository.search.resolves({
+        total: 0,
+        hits: []
+      });
+
+      const response = await pluginLocal.validate(
+        request,
+        {
+          username: 'login',
+          password: 'something else'
+        },
+        'kuid',
+        'local',
+        false
+      );
+
+      should(response).be.true();
+    });
+
+    it('should throw on creation if the password contains the login', () => {
+      pluginLocal.userRepository.get = async () => null;
+      pluginLocal.userRepository.search.resolves({
+        total: 0,
+        hits: []
+      });
+
+      return should(pluginLocal.validate(
+        request,
+        {
+          username: 'lOGin',
+          password: 'fooLoGInbar'
+        },
+        'kuid',
+        'local',
+        false
+      ))
+        .be.rejectedWith(pluginLocal.errors.LoginInPasswordError);
+    });
+
+    it('should allow update if the password does not contain the login', async () => {
+      const response = await pluginLocal.validate(
+        request,
+        {password: 'not the key for bar'},
+        'kuid',
+        'local',
+        true
+      );
+
+      should(response).be.true();
+    });
+
+    it('should throw on update if the password contains the login', () => {
+      return should(pluginLocal.validate(
+        request,
+        {password: 'FoO2 is not allowed'},
+        'kuid',
+        'local',
+        true
+      ))
+        .be.rejectedWith(pluginLocal.errors.LoginInPasswordError);
+    });
+  });
+
+  describe('#policies - forbid reuse', () => {
+    beforeEach(async () => {
+      pluginLocal.config.passwordPolicies = [
+        {
+          appliesTo: '*',
+          forbidReusedPasswordCount: 5
+        }
+      ];
+
+      const passwordHistory = [];
+      for (let i = 0; i < 8; i++) {
+        const password = `password${i}`;
+
+        passwordHistory.push({
+          algorithm: pluginLocal.config.algorithm,
+          encryption: pluginLocal.config.encryption,
+          pepper: false,
+          stretching: pluginLocal.config.stretching,
+          userPassword: await pluginLocal.passwordManager.encryptPassword(password, 'salt' + password),
+          userSalt: 'salt' + password
+        });
+      }
+
+      pluginLocal.userRepository.search.returns({
+        total: 1,
+        hits: [
+          pluginLocal.userRepository.fromDTO({
+            passwordHistory,
+            _id: 'username',
+            algorithm: pluginLocal.config.algorithm,
+            encryption: pluginLocal.config.encryption,
+            kuid: 'kuid',
+            pepper: false,
+            stretching: pluginLocal.config.stretching,
+            userPassword: await pluginLocal.passwordManager.encryptPassword('password', 'salt'),
+            userSalt: 'salt',
+            _kuzzle_info: {
+              author: null,
+              createdAt: Date.now() - 1000 * 3600 * 24 * 30,
+              updatedAt: Date.now() - 1000 * 3600 * 24 * 15,
+              updater: 'kuid'
+            }
+          })
+        ]
+      });
+    });
+
+    it('should allow setting a password that is not in the history', async () => {
+      const response = await pluginLocal.validate(
+        request,
+        {password: 'something new'},
+        'kuid',
+        'local',
+        true
+      );
+
+      should(response).be.true();
+    });
+
+    it('should allow to reuse a password that is after the count limit', async () => {
+      const response = await pluginLocal.validate(
+        request,
+        {password: 'password7'},
+        'kuid',
+        'local',
+        true
+      );
+
+      should(response).be.true();
+    });
+
+    it('should throw if a password is reused', () => {
+      return should(pluginLocal.validate(
+        request,
+        {password: 'password3'},
+        'kuid',
+        'local',
+        true
+      ))
+        .be.rejectedWith(pluginLocal.errors.ReusedPasswordError);
+    });
+
+  });
+
+  describe('#policies - password regex', () => {
+    beforeEach(() => {
+      pluginLocal.config.passwordPolicies = [
+        {
+          appliesTo: '*',
+          passwordRegex: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\\W){8,}' // is set from config => always a string
+        }
+      ];
+    });
+
+    it('should allow passwords which match', async () => {
+      const response = await pluginLocal.validate(
+        request,
+        {password: 'aB0%aB0%'},
+        'kuid',
+        'local',
+        true
+      );
+
+      should(response).be.true();
+    });
+
+    it('should throw if the password does not match', () => {
+      return should(pluginLocal.validate(
+        request,
+        {password: 'does not match regex'},
+        'kuid',
+        'local',
+        true
+      ))
+        .be.rejectedWith(pluginLocal.errors.WeakPasswordError);
+    });
+
+    it('should handle escaped regexes', async () => {
+      pluginLocal.config.passwordPolicies = [
+        {
+          appliesTo: '*',
+          passwordRegex: '/http:\\/\\/www\\.example\\.com/i'
+        }
+      ];
+
+      const response = await pluginLocal.validate(
+        request,
+        {password: 'HTTP://www.exaMPLE.COM'},
+        'kuid',
+        'local',
+        true
+      );
+
+      should(response).be.true();
+    });
+
+  });
 });
