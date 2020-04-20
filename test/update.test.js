@@ -59,6 +59,46 @@ describe('#update', () => {
     });
   });
 
+  it('should store the password history and truncate it to the desired length', async () => {
+    pluginLocal.getCredentialsFromUserId = async () => {
+      const user = new pluginLocal.User();
+      user._id = 'foo';
+      user.kuid = 'kuid';
+      user.userPassword = 'current password';
+      user._kuzzle_info = {
+        updatedAt: 0
+      };
+
+      for (let i = 0; i < 12; i++) {
+        user.passwordHistory.push({
+          userPassword: `password ${i}`
+        });
+      }
+
+      return user;
+    };
+
+    pluginLocal.config.passwordPolicies = [
+      {
+        appliesTo: '*',
+        forbidReusedPasswordCount: 5
+      }
+    ];
+
+    await pluginLocal.update(
+      request,
+      {username: 'foo', password: 'bar'},
+      'kuid'
+    );
+
+    const updated = pluginLocal.userRepository.update.firstCall.args[0];
+
+    should(updated.passwordHistory)
+      .have.length(4); // count - 1 as the current password is taken into account during check
+    should(updated.passwordHistory[0].userPassword)
+      .eql('current password');
+  });
+
   describe('#requirePassword', () => {
     beforeEach(() => {
       pluginLocal.userRepository.search.returns({
@@ -95,5 +135,6 @@ describe('#update', () => {
       return should(pluginLocal.update(request, {username: 'foo', 'password': 'bar'}))
         .rejectedWith('Invalid user or password.');
     });
+
   });
 });

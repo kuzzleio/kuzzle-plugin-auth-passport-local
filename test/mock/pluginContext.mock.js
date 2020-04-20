@@ -14,7 +14,13 @@ module.exports = function PluginContext() {
                 profileIds: ['profile1', 'profile2']
               }
             };
-          })
+          }),
+          mGetProfiles: sinon.stub().callsFake(async profileIds => profileIds.map(profileId => ({
+            _id: profileId,
+            policies: [
+              {roleId: `role for ${profileId}`}
+            ]
+          })))
         }
       },
       storage: {

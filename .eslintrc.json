@@ -9,7 +9,7 @@
     "linebreak-style": [2, "unix"],
     "new-cap": 1,
     "no-caller": 2,
-    "no-console": 0,
+    "no-console": 2,
     "no-catch-shadow": 2,
     "no-else-return": 2,
     "no-extend-native": 2,
