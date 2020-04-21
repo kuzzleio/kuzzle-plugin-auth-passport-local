@@ -1,14 +1,12 @@
-const
-  should = require('should'),
-  sinon = require('sinon'),
-  PluginLocal = require('../lib'),
-  PluginContext = require('./mock/pluginContext.mock.js');
+const should = require('should');
+const sinon = require('sinon');
+const PluginLocal = require('../lib');
+const PluginContext = require('./mock/pluginContext.mock.js');
 
 describe('#delete', () => {
   const pluginContext = new PluginContext();
-  let
-    pluginLocal,
-    request;
+  let pluginLocal;
+  let request;
 
   beforeEach(async () => {
     pluginLocal = new PluginLocal();
@@ -40,29 +38,62 @@ describe('#delete', () => {
     });
 
     it('should reject if no password is provided', () => {
-      return should(pluginLocal.delete(request, {username: 'foo', 'password': 'bar'}))
-        .rejectedWith('Cannot update credentials: password required.');
+      const promise = pluginLocal.delete(request, {
+        username: 'foo',
+        password: 'bar',
+      });
+
+      return should(promise).rejectedWith('Cannot update credentials: password required.');
     });
 
-    it('should reject if an empty password is provided', () => {
+    it('should reject if an empty password is provided', async () => {
+      request.input.body = {currentPassword: ''};
+      let promise = pluginLocal.delete(request, {
+        username: 'foo',
+        password: 'bar',
+      });
+
+      await should(promise).rejectedWith('Cannot update credentials: password required.');
+
+      // @deprecated
+      request.input.body = null;
       request.input.args.password = '';
-      return should(pluginLocal.delete(request, {username: 'foo', 'password': 'bar'}))
-        .rejectedWith('Cannot update credentials: password required.');
+
+      promise = pluginLocal.delete(request, {
+        username: 'foo',
+        password: 'bar',
+      });
+
+      await should(promise).rejectedWith('Cannot update credentials: password required.');
     });
 
     it('should accept if no password is provided but the request is not from the auth controller', () => {
       request = new pluginContext.constructors.Request({});
-      request.input.args.password = '';
+      request.input.body = {currentPassword: ''};
 
       return should(pluginLocal.delete(request, {username: 'foo', 'password': 'bar'}))
         .fulfilled();
     });
 
-    it('should reject if the password is invalid', () => {
-      request.input.args.password = 'ohnoes';
+    it('should reject if the password is invalid', async () => {
       pluginLocal.passwordManager.checkPassword.returns(false);
-      return should(pluginLocal.delete(request, {username: 'foo', 'password': 'bar'}))
-        .rejectedWith('Invalid user or password.');
+
+      request.input.body = {currentPassword: 'ohnoes'};
+      let promise = pluginLocal.delete(request, {
+        username: 'foo',
+        password: 'bar',
+      });
+
+      await should(promise).rejectedWith('Invalid user or password.');
+
+      // @deprecated
+      request.input.body = null;
+      request.input.args.password = 'ohnoes';
+      promise = pluginLocal.delete(request, {
+        username: 'foo',
+        password: 'bar',
+      });
+      await should(promise).rejectedWith('Invalid user or password.');
     });
   });
 });

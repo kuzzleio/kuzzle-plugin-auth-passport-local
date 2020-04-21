@@ -118,9 +118,9 @@ By default, there is no restriction to update or delete credentials (provided th
 
 However, if the option `requirePassword` is set to true, this plugin will refuse to update credentials unless either the currently valid password is also provided, or the change is performed via the `security` controller.
 
-To provide the password parameter, add it at the root level of the provided JSON payload.
+To provide the password parameter, add a `currentPassword` argument in the request body of the request.
 
-Example:
+Example (non-HTTP protocol):
 
 ```js
 {
@@ -128,12 +128,12 @@ Example:
   "action": "updateMyCredentials",
   "strategy": "local",
   "jwt": "<currently valid token>",
-  "password": "<currently valid password>",
   "body": {
+    "currentPassword": "<currently valid password>",
     // just skip the fields you don't want to update
     "username": "<new username>",
     "password": "<new password>"
-  }
+  },
 }
 ```
 
