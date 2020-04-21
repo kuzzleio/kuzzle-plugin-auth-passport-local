@@ -106,26 +106,29 @@ describe('#verify', () => {
       should(response).eql({kuid: 'foo'});
     });
 
-    it('should return a null kuid if the password is expired', async () => {
+    it('should throw if the password is expired', () => {
       delay = 1000 * 60 * 42 + 1;
 
-      const response = await pluginLocal.verify(request, 'foo', 'bar');
+      return pluginLocal.verify(request, 'foo', 'bar')
+        .then(() => {
+          throw new Error('should not happen');
+        })
+        .catch(error => {
+          const err = new pluginLocal.errors.ExpiredPasswordError();
 
-      const err = new pluginLocal.errors.ExpiredPasswordError();
+          should(error).match({
+            status: 403,
+            id: err.id,
+            code: err.code
+          });
 
-      should(response).match({
-        kuid: null,
-        statusCode: 403,
-        id: err.id,
-        code: err.code
-      });
-
-      should(
-        jsonwebtoken.verify(
-          response.resetToken,
-          pluginLocal.config.resetPasswordSecret
-        ).kuid
-      ).eql('foo');
+          should(
+            jsonwebtoken.verify(
+              error.resetToken,
+              pluginLocal.config.resetPasswordSecret
+            ).kuid
+          ).eql('foo');
+        });
     });
   });
 
@@ -155,26 +158,29 @@ describe('#verify', () => {
       should(response).eql({kuid: 'foo'});
     });
 
-    it('should return a null kuid if the password must be changed', async () => {
+    it('should throw if the password must be changed', () => {
       who = 'someone else';
 
-      const response = await pluginLocal.verify(request, 'foo', 'bar');
+      return pluginLocal.verify(request, 'foo', 'bar')
+        .then(() => {
+          throw new Error('should not happen')
+        })
+        .catch(error => {
+          const err = new pluginLocal.errors.MustChangePasswordError();
 
-      const err = new pluginLocal.errors.MustChangePasswordError();
+          should(error).match({
+            status: 401,
+            id: err.id,
+            code: err.code
+          });
 
-      should(response).match({
-        kuid: null,
-        statusCode: 401,
-        id: err.id,
-        code: err.code
-      });
-
-      should(
-        jsonwebtoken.verify(
-          response.resetToken,
-          pluginLocal.config.resetPasswordSecret
-        ).kuid
-      ).eql('foo');
+          should(
+            jsonwebtoken.verify(
+              error.resetToken,
+              pluginLocal.config.resetPasswordSecret
+            ).kuid
+          ).eql('foo');
+        });
 
     });
 
