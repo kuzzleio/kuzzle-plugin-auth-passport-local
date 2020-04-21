@@ -1,7 +1,6 @@
 const
   jsonwebtoken = require('jsonwebtoken'),
   should = require('should'),
-  sinon = require('sinon'),
   PluginLocal = require('../lib'),
   PluginContext = require('./mock/pluginContext.mock.js');
 
