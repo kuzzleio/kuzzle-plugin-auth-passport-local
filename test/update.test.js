@@ -17,7 +17,7 @@ describe('#update', () => {
 
     pluginLocal.passwordManager.encryptPassword = sinon.stub().resolvesArg(0);
 
-    request = new pluginContext.constructors.Request({});
+    request = new pluginContext.constructors.Request({controller: 'auth'});
   });
 
   it('should throw an error if the user doesn\'t exists', () => {
@@ -122,9 +122,9 @@ describe('#update', () => {
         .rejectedWith('Cannot update credentials: password required.');
     });
 
-    it('should accept if no password is provided but the request is from the security controller', () => {
+    it('should accept if no password is provided but the request is not from the auth controller', () => {
+      request = new pluginContext.constructors.Request({});
       request.input.args.password = '';
-      request.input.controller = 'security';
       return should(pluginLocal.update(request, {username: 'foo', 'password': 'bar'}))
         .fulfilled();
     });
