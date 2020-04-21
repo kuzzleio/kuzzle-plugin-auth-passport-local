@@ -17,7 +17,7 @@ describe('#delete', () => {
     }, pluginContext);
     pluginLocal.userRepository = new (require('./mock/getUserRepository.mock')(pluginLocal))();
 
-    request = new pluginContext.constructors.Request({});
+    request = new pluginContext.constructors.Request({controller: 'auth'});
   });
 
   it('should return true if the user exists', async () => {
@@ -50,9 +50,10 @@ describe('#delete', () => {
         .rejectedWith('Cannot update credentials: password required.');
     });
 
-    it('should accept if no password is provided but the request is from the security controller', () => {
+    it('should accept if no password is provided but the request is not from the auth controller', () => {
+      request = new pluginContext.constructors.Request({});
       request.input.args.password = '';
-      request.input.controller = 'security';
+
       return should(pluginLocal.delete(request, {username: 'foo', 'password': 'bar'}))
         .fulfilled();
     });
