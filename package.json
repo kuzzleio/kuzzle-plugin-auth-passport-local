@@ -25,16 +25,16 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "passport": "0.4.0",
+    "passport": "0.4.1",
     "passport-local": "1.0.0",
-    "semver": "^6.3.0"
+    "semver": "^7.3.2"
   },
   "devDependencies": {
-    "eslint": "^6.7.2",
-    "mocha": "^6.2.2",
-    "nyc": "^14.1.1",
+    "eslint": "^6.8.0",
+    "mocha": "^7.1.1",
+    "nyc": "^15.0.1",
     "should": "13.2.3",
-    "sinon": "^7.5.0"
+    "sinon": "^9.0.2"
   },
   "homepage": "https://github.com/kuzzleio/kuzzle-plugin-auth-passport-local#readme",
   "maintainers": [
@@ -42,5 +42,9 @@
       "name": "kuzzle",
       "email": "support@kuzzle.io"
     }
+  ],
+  "files": [
+    "lib/**/*.js",
+    "manifest.json"
   ]
 }
