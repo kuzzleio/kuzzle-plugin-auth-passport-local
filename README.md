@@ -236,7 +236,7 @@ For instance, it can be used programatically from a plugin to generate a reset p
 {
   "controller": "kuzzle-plugin-auth-passport-local/password",
   "action": "getResetPasswordToken",
-  "kuid": "<kuid>"
+  "_id": "<kuid>"
 }
 ```
 

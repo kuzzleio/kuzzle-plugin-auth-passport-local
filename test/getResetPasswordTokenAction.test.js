@@ -17,26 +17,19 @@ describe('#getResetPasswordTokenAction', () => {
     pluginLocal.userRepository = new (require('./mock/getUserRepository.mock')(pluginLocal))();
 
     request = new pluginContext.constructors.Request({
-      kuid: 'kuid'
+      _id: 'kuid'
     });
   });
 
   it('should throw if the kuid is missing', () => {
-    delete request.input.args.kuid;
+    const req = new pluginContext.constructors.Request({});
 
-    return should(pluginLocal.getResetPasswordTokenAction(request))
+    return should(pluginLocal.getResetPasswordTokenAction(req))
       .be.rejectedWith(pluginLocal.errors.BadRequestError);
   });
 
   it('should throw if the kuid is an empty string', () => {
-    request.input.args.kuid = '';
-
-    return should(pluginLocal.getResetPasswordTokenAction(request))
-      .be.rejectedWith(pluginLocal.errors.BadRequestError);
-  });
-
-  it('should throw if the kuid is not a string', () => {
-    request.input.args.kuid = [true];
+    request.input.resource._id = '';
 
     return should(pluginLocal.getResetPasswordTokenAction(request))
       .be.rejectedWith(pluginLocal.errors.BadRequestError);
