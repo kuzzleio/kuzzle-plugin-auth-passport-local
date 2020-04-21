@@ -158,6 +158,23 @@ describe('#verify', () => {
       should(response).eql({kuid: 'foo'});
     });
 
+    it('should allow login in if the user is an admin', async () => {
+      who = 'someone else';
+
+      pluginContext.accessors.sdk.security.mGetProfiles.onCall(
+        pluginContext.accessors.sdk.security.mGetProfiles.callCount
+      ).resolves([
+        {
+          _id: 'admin',
+          policies: [ {roleId: 'admin'} ]
+        }
+      ]);
+
+      const response = await pluginLocal.verify(request, 'foo', 'bar');
+
+      should(response).eql({kuid: 'foo'});
+    });
+
     it('should throw if the password must be changed', () => {
       who = 'someone else';
 
