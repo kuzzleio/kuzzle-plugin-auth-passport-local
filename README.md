@@ -43,7 +43,7 @@ Password policies can be used to define a set of additional rules to apply to us
 
 Each password policy is an object with the following properties:
 
-* `appliesTo`: (**mandatory**). Can be either set to the `*` to match all users, or an object.
+* `appliesTo`: (mandatory). Can be either set to the `*` to match all users, or an object.
 * `appliesTo.users`: An array of user `kuids` the policy applies to.
 * `appliesTo.profiles`: An array of `profile` ids the policy applies to.
 * `appliesTod.roles`: An array of `role` ids the policy applies to.
