@@ -163,7 +163,7 @@ describe('#verify', () => {
 
       return pluginLocal.verify(request, 'foo', 'bar')
         .then(() => {
-          throw new Error('should not happen')
+          throw new Error('should not happen');
         })
         .catch(error => {
           const err = new pluginLocal.errors.MustChangePasswordError();
