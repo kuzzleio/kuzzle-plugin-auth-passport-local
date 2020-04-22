@@ -35,7 +35,7 @@ The default configuration is as follow:
 * `digest` describes how the hashed password is stored in the persisting layer. See other possible values in the [node.js documentation](https://nodejs.org/api/buffer.html#buffer_buf_tostring_encoding_start_end)
 * `encryption` determines whether the hashing algorithm uses `crypto.createHash` (`hash`) or `crypto.createHmac` (`hmac`). For more details, see the [node.js documentation](https://nodejs.org/api/crypto.html)
 * `requirePassword` must be a boolean. If true, this makes this plugin refuse any credentials update or deletion, unless the currently valid password is provided or the change is performed via the `security` controller
-* `resetPasswordExpiresIn`: A positive time representation of the delay after which a reset password token expires (see [ms](https://www.npmjs.com/package/ms) for possible formats). Users with expired passwords are given a `resetPasswordToken` when login in and must change their password to be allowed to log in again.
+* `resetPasswordExpiresIn`: A positive time representation of the delay after which a reset password token expires (see [ms](https://www.npmjs.com/package/ms) for possible formats). Users with expired passwords are given a `resetPasswordToken` when logging in and must change their password to be allowed to log in again.
 
 ## Password policies
 
