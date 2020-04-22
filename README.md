@@ -81,7 +81,7 @@ Each password policy is an object with the following properties:
       "appliesTo": {
         "roles": ["admin"]
       },
-      "passwordRegex": "((?=.*[a-z](?=.*[A-Z])(?=.*[0-9])(?=.*\\W)(?=.{8,}})|(?=.{24,})"
+      "passwordRegex": "((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\\W)(?=.{8,}}))|(?=.{24,})"
     }
   ]
 }
