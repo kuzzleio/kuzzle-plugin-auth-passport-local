@@ -39,7 +39,7 @@ The default configuration is as follow:
 
 ## Password policies
 
-Password policies can be used to define a set of additional rules to apply to users or groups of users.
+Password policies can be used to define a set of additional rules to apply to users, or to groups of users.
 
 Each password policy is an object with the following properties:
 
