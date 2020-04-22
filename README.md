@@ -52,7 +52,7 @@ Each password policy is an object with the following properties:
 
 ### Optional properties
 
-* `expiresAfter`: A positive time representation of the delay after which a password expires (see [ms](https://www.npmjs.com/package/ms) for possible formats). Users with expired passwords are given a `resetPasswordToken` when login in and must change their password to be allowed to log in again.
+* `expiresAfter`: A positive time representation of the delay after which a password expires (see [ms](https://www.npmjs.com/package/ms) for possible formats). Users with expired passwords are given a `resetPasswordToken` when logging in and must change their password to be allowed to log in again.
 * `forbidLoginInPassword`: If set to `true`, prevent users to use their username in part of the password. The check is case-**in**sensitive.
 * `forbidReusedPasswordCount`: The number of passwords to store in history and check against when a new password is set.
 * `mustChangePasswordIfSetByAdmin`: If set to `true`, when the password is set for a user by someone else, the user will receive a `resetPasswordToken` upon next login and will have to change her password before being allowed to log in again.
