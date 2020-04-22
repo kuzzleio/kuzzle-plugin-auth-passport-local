@@ -25,14 +25,14 @@ describe('#getResetPasswordTokenAction', () => {
     const req = new pluginContext.constructors.Request({});
 
     return should(pluginLocal.getResetPasswordTokenAction(req))
-      .be.rejectedWith(pluginLocal.errors.BadRequestError);
+      .be.rejectedWith(pluginContext.errors.BadRequestError);
   });
 
   it('should throw if the kuid is an empty string', () => {
     request.input.resource._id = '';
 
     return should(pluginLocal.getResetPasswordTokenAction(request))
-      .be.rejectedWith(pluginLocal.errors.BadRequestError);
+      .be.rejectedWith(pluginContext.errors.BadRequestError);
   });
 
   it('should throw if the user does not exist', () => {
@@ -42,7 +42,7 @@ describe('#getResetPasswordTokenAction', () => {
     });
 
     return should(pluginLocal.getResetPasswordTokenAction(request))
-      .be.rejectedWith(pluginLocal.errors.BadRequestError);
+      .be.rejectedWith(pluginContext.errors.BadRequestError);
   });
 
   it('should return a token if the kuid is valid', async () => {

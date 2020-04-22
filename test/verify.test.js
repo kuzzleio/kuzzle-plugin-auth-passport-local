@@ -114,12 +114,10 @@ describe('#verify', () => {
           throw new Error('should not happen');
         })
         .catch(error => {
-          const err = new pluginLocal.errors.ExpiredPasswordError();
-
           should(error).match({
-            status: 403,
-            id: err.id,
-            code: err.code
+            status: 401,
+            id: 'plugin.kuzzle-plugin-auth-passport-local.expired-password',
+            code: 0x004000001
           });
 
           should(
@@ -183,12 +181,10 @@ describe('#verify', () => {
           throw new Error('should not happen');
         })
         .catch(error => {
-          const err = new pluginLocal.errors.MustChangePasswordError();
-
           should(error).match({
             status: 401,
-            id: err.id,
-            code: err.code
+            id: 'plugin.kuzzle-plugin-auth-passport-local.must-change-password',
+            code: 0x004000005
           });
 
           should(

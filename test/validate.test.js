@@ -93,7 +93,7 @@ describe('#validate', () => {
         'local',
         false
       ))
-        .be.rejectedWith(pluginLocal.errors.LoginInPasswordError);
+        .be.rejectedWith(pluginContext.errors.LoginInPasswordError);
     });
 
     it('should allow update if the password does not contain the login', async () => {
@@ -116,7 +116,7 @@ describe('#validate', () => {
         'local',
         true
       ))
-        .be.rejectedWith(pluginLocal.errors.LoginInPasswordError);
+        .be.rejectedWith(pluginContext.errors.LoginInPasswordError);
     });
   });
 
@@ -199,7 +199,7 @@ describe('#validate', () => {
         'local',
         true
       ))
-        .be.rejectedWith(pluginLocal.errors.ReusedPasswordError);
+        .be.rejectedWith(pluginContext.errors.ReusedPasswordError);
     });
 
   });
@@ -234,7 +234,7 @@ describe('#validate', () => {
         'local',
         true
       ))
-        .be.rejectedWith(pluginLocal.errors.WeakPasswordError);
+        .be.rejectedWith(pluginContext.errors.WeakPasswordError);
     });
 
     it('should handle escaped regexes', async () => {

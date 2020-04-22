@@ -48,7 +48,7 @@ Each password policy is an object with the following properties:
 * `appliesTo.profiles`: An array of `profile` ids the policy applies to.
 * `appliesTod.roles`: An array of `role` ids the policy applies to.
 
-> Either `users`, `profiles` or `roles` must be set if `appliesTo` is an object.
+> At least one of `users`, `profiles` or `roles` properties must be set if `appliesTo` is an object.
 
 ### Optional properties
 
