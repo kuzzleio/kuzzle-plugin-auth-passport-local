@@ -228,7 +228,7 @@ The returned jwt can be used the same way as if the user had logged in.
 A reset token is automatically returned upon login if the password is either expired or must be changed according to the defined policies.
 
 Another way to get a reset token for a user is to use the `getResetPasswordToken` route. 
-For instance, it can be used programatically from a plugin to generate a reset password link for a user in case he lost his password.
+For instance, it can be used programmatically from a plugin to generate a reset password link for a user in case he lost his password.
 
 > :warning: **This route MUST be secured and accessible to permitted users only!**
 
