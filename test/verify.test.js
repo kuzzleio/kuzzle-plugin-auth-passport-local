@@ -116,7 +116,7 @@ describe('#verify', () => {
         .catch(error => {
           should(error).match({
             status: 401,
-            id: 'plugin.kuzzle-plugin-auth-passport-local.expired-password',
+            id: 'plugin.kuzzle-plugin-auth-passport-local.expired_password',
             code: 0x004000001
           });
 
@@ -183,7 +183,7 @@ describe('#verify', () => {
         .catch(error => {
           should(error).match({
             status: 401,
-            id: 'plugin.kuzzle-plugin-auth-passport-local.must-change-password',
+            id: 'plugin.kuzzle-plugin-auth-passport-local.must_change_password',
             code: 0x004000005
           });
 

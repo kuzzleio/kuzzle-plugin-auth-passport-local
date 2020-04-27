@@ -83,7 +83,7 @@ describe('#validate', () => {
         hits: []
       });
 
-      const err = pluginContext.errorsManager.get('login-in-password');
+      const err = pluginContext.errorsManager.get('login_in_password');
 
       return should(pluginLocal.validate(
         request,
@@ -111,7 +111,7 @@ describe('#validate', () => {
     });
 
     it('should throw on update if the password contains the login', () => {
-      const err = pluginContext.errorsManager.get('login-in-password');
+      const err = pluginContext.errorsManager.get('login_in_password');
 
       return should(pluginLocal.validate(
         request,
@@ -196,7 +196,7 @@ describe('#validate', () => {
     });
 
     it('should throw if a password is reused', () => {
-      const err = pluginContext.errorsManager.get('reused-password');
+      const err = pluginContext.errorsManager.get('reused_password');
 
       return should(pluginLocal.validate(
         request,
@@ -232,7 +232,7 @@ describe('#validate', () => {
     });
 
     it('should throw if the password does not match', () => {
-      const err = pluginContext.errorsManager.get('weak-password');
+      const err = pluginContext.errorsManager.get('weak_password');
 
       return should(pluginLocal.validate(
         request,
