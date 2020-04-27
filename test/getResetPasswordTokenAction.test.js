@@ -53,7 +53,7 @@ describe('#getResetPasswordTokenAction', () => {
     );
 
     should(parsed).match({
-      kuid: 'kuid',
+      resetForKuid: 'kuid',
       iss: 'kuzzle-plugin-auth-passport-local'
     });
 

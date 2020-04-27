@@ -124,7 +124,7 @@ describe('#verify', () => {
             jsonwebtoken.verify(
               error.resetToken,
               pluginLocal.config.resetPasswordSecret
-            ).kuid
+            ).resetForKuid
           ).eql('foo');
         });
     });
@@ -191,7 +191,7 @@ describe('#verify', () => {
             jsonwebtoken.verify(
               error.resetToken,
               pluginLocal.config.resetPasswordSecret
-            ).kuid
+            ).resetForKuid
           ).eql('foo');
         });
 
