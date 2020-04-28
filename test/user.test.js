@@ -19,6 +19,15 @@ describe('#user', () => {
   });
 
   describe('#getKuzzleUser', () => {
+    it('should return null if the user does not exist', async() => {
+      pluginContext.accessors.sdk.security.getUser.rejects(
+        new pluginContext.errors.NotFoundError('not found', 'services.storage.not_found')
+      );
+
+      const kuzzleUser = await user.getKuzzleUser();
+      should(kuzzleUser).be.null();
+    });
+
     it('should return a kuzzle user from the sdk', async () => {
       const kuzzleUser = await user.getKuzzleUser();
 
@@ -39,6 +48,13 @@ describe('#user', () => {
   });
 
   describe('#getKuzzleUserProfiles', () => {
+    it('should return an empty array if the user is not found', async () => {
+      user.getKuzzleUser = async () => null;
+
+      const profiles = await user.getKuzzleUserProfiles();
+      should(profiles).eql([]);
+    });
+
     it('should return user profiles', async () => {
       const profiles = await user.getKuzzleUserProfiles();
 
