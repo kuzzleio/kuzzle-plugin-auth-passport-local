@@ -22,8 +22,8 @@
     },
     "login_in_password": {
       "code": 4,
-      "description": "Login in password",
-      "message": "Login in password",
+      "description": "Password cannot contain Username",
+      "message": "Password cannot contain Username",
       "class": "BadRequestError"
     },
     "must_change_password": {
