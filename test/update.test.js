@@ -1,53 +1,114 @@
 const
   should = require('should'),
+  PluginContext = require('./mock/pluginContext.mock.js'),
   PluginLocal = require('../lib'),
-  sinon = require('sinon'),
-  PluginContext = require('./mock/pluginContext.mock.js');
+  sinon = require('sinon');
 
 describe('#update', () => {
-  const
-    pluginContext = new PluginContext(),
-    Repository = require('./mock/repository.mock.js');
-  let pluginLocal;
+  const pluginContext = new PluginContext();
+  let
+    pluginLocal,
+    request;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     pluginLocal = new PluginLocal();
-    pluginLocal.userRepository = new Repository();
-    pluginLocal.passwordManager = {
-      encryptPassword: sinon.stub().callsFake(password => Promise.resolve(password))
-    };
-    pluginLocal.context = pluginContext;
-    pluginLocal.config = {};
+    await pluginLocal.init({}, pluginContext);
+    pluginLocal.userRepository = new (require('./mock/getUserRepository.mock')(pluginLocal))();
+
+    pluginLocal.passwordManager.encryptPassword = sinon.stub().resolvesArg(0);
+
+    request = new pluginContext.constructors.Request({controller: 'auth'});
   });
 
   it('should throw an error if the user doesn\'t exists', () => {
-    pluginLocal.userRepository.search = () => Promise.resolve({total: 0, hits: []});
+    pluginLocal.userRepository.search.resolves({total: 0, hits: []});
 
-    return should(pluginLocal.update(null, {username: 'foo', password: 'bar'}, 'foo'))
+    return should(pluginLocal.update(request, {username: 'foo', password: 'bar'}, 'foo'))
       .be.rejectedWith('No credentials found for user "foo".');
   });
 
-  it('should update the user and its username if the credentials are valid', () => {
-    return should(pluginLocal.update(null, {username: 'foo', password: 'bar'}, 'foo')).be.fulfilledWith({username: 'foo', kuid: 'someId'});
+  it('should update the user and its username if the credentials are valid', async () => {
+    const response = await pluginLocal.update(
+      request,
+      {username: 'foo', password: 'bar'},
+      'foo'
+    );
+
+    should(pluginLocal.getUsersRepository().create)
+      .be.calledOnce();
+
+    should(response).eql({
+      kuid: 'someId',
+      username: 'foo'
+    });
   });
 
-  it('should update the user if the credentials are valid', () => {
-    pluginLocal.userRepository.get = id => Promise.resolve({_id: id, kuid: 'someId'});
-    pluginLocal.userRepository.search = () => Promise.resolve({total: 1, hits: [{_id: 'foo', kuid: 'someId'}]});
-    pluginLocal.userRepository.update = () => Promise.resolve({_id: 'foo', kuid: 'someId'});
+  it('should update the user if the credentials are valid', async () => {
+    const response = await pluginLocal.update(
+      request,
+      {username: 'foo2', password: 'bar'},
+      'foo'
+    );
 
-    return should(pluginLocal.update(null, {username: 'foo', password: 'bar'}, 'foo')).be.fulfilledWith({username: 'foo', kuid: 'someId'});
+    should(pluginLocal.getUsersRepository().update)
+      .be.calledOnce();
+
+    should(response).eql({
+      kuid: 'someId',
+      username: 'foo2'
+    });
+  });
+
+  it('should store the password history and truncate it to the desired length', async () => {
+    pluginLocal.getCredentialsFromUserId = async () => {
+      const user = new pluginLocal.User();
+      user._id = 'foo';
+      user.kuid = 'kuid';
+      user.userPassword = 'current password';
+      user._kuzzle_info = {
+        updatedAt: 0
+      };
+
+      for (let i = 0; i < 12; i++) {
+        user.passwordHistory.push({
+          userPassword: `password ${i}`
+        });
+      }
+
+      return user;
+    };
+
+    pluginLocal.config.passwordPolicies = [
+      {
+        appliesTo: '*',
+        forbidReusedPasswordCount: 5
+      }
+    ];
+
+    await pluginLocal.update(
+      request,
+      {username: 'foo', password: 'bar'},
+      'kuid'
+    );
+
+    const updated = pluginLocal.userRepository.update.firstCall.args[0];
+
+    should(updated.passwordHistory)
+      .have.length(4); // count - 1 as the current password is taken into account during check
+    should(updated.passwordHistory[0].userPassword)
+      .eql('current password');
   });
 
   describe('#requirePassword', () => {
-    let request;
-
     beforeEach(() => {
-      pluginLocal.userRepository.search = () => Promise.resolve({total: 1, hits: [{_id: 'foo', kuid: 'someId'}]});
-      pluginLocal.userRepository.update = () => Promise.resolve({_id: 'foo', kuid: 'someId'});
+      pluginLocal.userRepository.search.returns({
+        total: 1,
+        hits: [
+          pluginLocal.userRepository.fromDTO({_id: 'foo', kuid: 'someId'})
+        ]
+      });
       pluginLocal.config.requirePassword = true;
       pluginLocal.passwordManager.checkPassword = sinon.stub().returns(true);
-      request = {input: {args: {}, controller: 'auth'}};
     });
 
     it('should reject if no password is provided', () => {
@@ -62,8 +123,8 @@ describe('#update', () => {
     });
 
     it('should accept if no password is provided but the request is not from the auth controller', () => {
+      request = new pluginContext.constructors.Request({});
       request.input.args.password = '';
-      request.input.controller = null;
       return should(pluginLocal.update(request, {username: 'foo', 'password': 'bar'}))
         .fulfilled();
     });
@@ -74,5 +135,6 @@ describe('#update', () => {
       return should(pluginLocal.update(request, {username: 'foo', 'password': 'bar'}))
         .rejectedWith('Invalid user or password.');
     });
+
   });
 });

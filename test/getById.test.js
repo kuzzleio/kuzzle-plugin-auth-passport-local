@@ -4,24 +4,32 @@ const
   PluginContext = require('./mock/pluginContext.mock.js');
 
 describe('#getById', () => {
-  const
-    pluginContext = new PluginContext(),
-    Repository = require('./mock/repository.mock.js');
-  let pluginLocal;
+  const pluginContext = new PluginContext();
+  let
+    pluginLocal,
+    request;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     pluginLocal = new PluginLocal();
-    pluginLocal.userRepository = new Repository();
-    pluginLocal.context = pluginContext;
+    await pluginLocal.init({}, pluginContext);
+    pluginLocal.userRepository = new (require('./mock/getUserRepository.mock')(pluginLocal))();
+
+    request = new pluginContext.constructors.Request({});
   });
 
-  it('should return a user object if the user exists', () => {
-    return should(pluginLocal.getById(null, 'foo')).be.fulfilledWith({username: 'foo', kuid: 'foo'});
+  it('should return a user object if the user exists', async () => {
+    const user = await pluginLocal.getById(request, 'foo');
+
+    should(user).eql({
+      kuid: 'foo',
+      username: 'foo'
+    });
   });
 
   it('should throw an error if the user doesn\'t exists', () => {
     pluginLocal.userRepository.get = () => Promise.resolve(null);
 
-    return should(pluginLocal.getById(null, 'foo')).be.rejectedWith({message: 'No credentials found for username "foo".'});
+    return should(pluginLocal.getById(request, 'foo'))
+      .be.rejectedWith({message: 'No credentials found for username "foo".'});
   });
 });

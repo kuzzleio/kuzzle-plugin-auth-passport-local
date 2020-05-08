@@ -4,30 +4,36 @@ const
   PluginContext = require('./mock/pluginContext.mock.js');
 
 describe('#create', () => {
-  const
-    pluginContext = new PluginContext(),
-    Repository = require('./mock/repository.mock.js');
-  let pluginLocal;
+  const pluginContext = new PluginContext();
+  let
+    pluginLocal,
+    request;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     pluginLocal = new PluginLocal();
-    pluginLocal.userRepository = new Repository();
-    pluginLocal.passwordManager = require('./mock/passwordManager.mock');
-    pluginLocal.context = pluginContext;
-    pluginLocal.config = {
-      algorithm: 'sha512',
-      digest: 'hex',
-      encryption: 'hmac'
-    };
+    await pluginLocal.init({}, pluginContext);
+    pluginLocal.userRepository = new (require('./mock/getUserRepository.mock')(pluginLocal));
+
+    request = new pluginContext.constructors.Request({});
   });
 
-  it('should return a user object if the user doesn\'t exists', () => {
+  it('should return a user object if the user doesn\'t exists', async () => {
     pluginLocal.userRepository.search = () => Promise.resolve({total: 0, hits: []});
 
-    return should(pluginLocal.create(null, {username: 'foo', password: 'bar'}, 'foo')).be.fulfilledWith({kuid:'someId', username: 'foo'});
+    const response = await pluginLocal.create(
+      request,
+      {username: 'foo', password: 'bar'},
+      'foo'
+    );
+
+    should(response).eql({
+      kuid: 'someId',
+      username: 'foo'
+    });
   });
 
   it('should throw an error if the user already exists', () => {
-    return should(pluginLocal.create(null, {username: 'foo', password: 'bar'}, 'foo')).be.rejectedWith({message: 'A strategy already exists for user "foo".'});
+    return should(pluginLocal.create(request, {username: 'foo', password: 'bar'}, 'foo'))
+      .be.rejectedWith({message: 'A strategy already exists for user "foo".'});
   });
 });
