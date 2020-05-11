@@ -1,28 +1,59 @@
 const
   sinon = require('sinon'),
-  defaultError = sinon.stub().callsFake(message => ({message})),
-  repository = require('./repository.mock');
+  { Request, errors } = require('kuzzle-common-objects'),
+  manifest = require('../../manifest.json');
 
-module.exports = function () {
+const getError = id => {
+  const info = manifest.errors[id];
+  const error = new errors[info.class](
+    info.message,
+    `plugin.${manifest.name}.${id}`,
+    0x004000000 + info.code
+  );
+  return error;
+};
+
+
+module.exports = function PluginContext() {
   return {
-    constructors: {
-      Repository: repository,
-      Request: sinon.stub()
+    accessors: {
+      sdk: {
+        security: {
+          getUser: sinon.stub().callsFake(async kuid => {
+            return {
+              _id: kuid,
+              content: {
+                profileIds: ['profile1', 'profile2']
+              }
+            };
+          }),
+          mGetProfiles: sinon.stub().callsFake(async profileIds => profileIds.map(profileId => ({
+            _id: profileId,
+            policies: [
+              {roleId: `role for ${profileId}`}
+            ]
+          })))
+        }
+      },
+      storage: {
+        bootstrap: sinon.stub().resolves()
+      },
+      execute: sinon.stub().resolves({result: true})
     },
     config: {
       version: '1.4.0'
     },
-    accessors: {
-      storage: {
-        bootstrap: sinon.stub().returns(Promise.resolve())
+    constructors: {
+      Repository: function () {
+        this.create = sinon.stub().resolves();
+        this.get = sinon.stub().resolves();
       },
-      execute: sinon.stub().returns(Promise.resolve())
+      Request
     },
-    errors: {
-      BadRequestError: defaultError,
-      ForbiddenError: defaultError,
-      PluginImplementationError: defaultError,
-      PreconditionError: defaultError
+    errors,
+    errorsManager: {
+      get: getError,
+      throw: id => { throw getError(id); }
     }
   };
 };

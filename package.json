@@ -1,6 +1,6 @@
 {
   "name": "kuzzle-plugin-auth-passport-local",
-  "version": "6.1.1",
+  "version": "6.2.0",
   "description": "Kuzzle plugin to log-in users",
   "main": "./lib/index.js",
   "repository": {
@@ -25,16 +25,21 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "passport": "0.4.0",
+    "debug": "^4.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "ms": "^2.1.2",
+    "passport": "0.4.1",
     "passport-local": "1.0.0",
-    "semver": "^6.3.0"
+    "semver": "^7.3.2"
   },
   "devDependencies": {
-    "eslint": "^6.7.2",
-    "mocha": "^6.2.2",
-    "nyc": "^14.1.1",
+    "eslint": "^7.0.0",
+    "kuzzle-common-objects": "^4.1.1",
+    "mocha": "^7.1.2",
+    "nyc": "^15.0.1",
     "should": "13.2.3",
-    "sinon": "^7.5.0"
+    "should-sinon": "0.0.6",
+    "sinon": "^9.0.2"
   },
   "homepage": "https://github.com/kuzzleio/kuzzle-plugin-auth-passport-local#readme",
   "maintainers": [
