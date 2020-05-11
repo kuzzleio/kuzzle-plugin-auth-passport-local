@@ -36,42 +36,42 @@ describe('#resetPasswordAction', () => {
     const req = new pluginContext.constructors.Request({});
 
     return should(pluginLocal.resetPasswordAction(req))
-      .be.rejectedWith(pluginLocal.errors.BadRequestError);
+      .be.rejectedWith(pluginContext.errors.BadRequestError);
   });
 
   it('should throw if password is not set', () => {
     delete request.input.body.password;
 
     return should(pluginLocal.resetPasswordAction(request))
-      .be.rejectedWith(pluginLocal.errors.BadRequestError);
+      .be.rejectedWith(pluginContext.errors.BadRequestError);
   });
 
   it('should throw if password is not a string', () => {
     request.input.body.password = [];
 
     return should(pluginLocal.resetPasswordAction(request))
-      .be.rejectedWith(pluginLocal.errors.BadRequestError);
+      .be.rejectedWith(pluginContext.errors.BadRequestError);
   });
 
   it('should throw if the password is an empty string', () => {
     request.input.body.password = '  ';
 
     return should(pluginLocal.resetPasswordAction(request))
-      .be.rejectedWith(pluginLocal.errors.BadRequestError);
+      .be.rejectedWith(pluginContext.errors.BadRequestError);
   });
 
   it('should throw if the token is missing', () => {
     delete request.input.body.token;
 
     return should(pluginLocal.resetPasswordAction(request))
-      .be.rejectedWith(pluginLocal.errors.BadRequestError);
+      .be.rejectedWith(pluginContext.errors.BadRequestError);
   });
 
   it('should throw if the token is not a string', () => {
     request.input.body.token = true;
 
     return should(pluginLocal.resetPasswordAction(request))
-      .be.rejectedWith(pluginLocal.errors.BadRequestError);
+      .be.rejectedWith(pluginContext.errors.BadRequestError);
   });
 
   it('should update the password when ok', async () => {

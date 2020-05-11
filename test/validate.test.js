@@ -83,6 +83,8 @@ describe('#validate', () => {
         hits: []
       });
 
+      const err = pluginContext.errorsManager.get('login_in_password');
+
       return should(pluginLocal.validate(
         request,
         {
@@ -93,7 +95,7 @@ describe('#validate', () => {
         'local',
         false
       ))
-        .be.rejectedWith(pluginLocal.errors.LoginInPasswordError);
+        .be.rejectedWith(err);
     });
 
     it('should allow update if the password does not contain the login', async () => {
@@ -109,6 +111,8 @@ describe('#validate', () => {
     });
 
     it('should throw on update if the password contains the login', () => {
+      const err = pluginContext.errorsManager.get('login_in_password');
+
       return should(pluginLocal.validate(
         request,
         {password: 'FoO2 is not allowed'},
@@ -116,7 +120,7 @@ describe('#validate', () => {
         'local',
         true
       ))
-        .be.rejectedWith(pluginLocal.errors.LoginInPasswordError);
+        .be.rejectedWith(err);
     });
   });
 
@@ -192,6 +196,8 @@ describe('#validate', () => {
     });
 
     it('should throw if a password is reused', () => {
+      const err = pluginContext.errorsManager.get('reused_password');
+
       return should(pluginLocal.validate(
         request,
         {password: 'password3'},
@@ -199,9 +205,8 @@ describe('#validate', () => {
         'local',
         true
       ))
-        .be.rejectedWith(pluginLocal.errors.ReusedPasswordError);
+        .be.rejectedWith(err);
     });
-
   });
 
   describe('#policies - password regex', () => {
@@ -227,6 +232,8 @@ describe('#validate', () => {
     });
 
     it('should throw if the password does not match', () => {
+      const err = pluginContext.errorsManager.get('weak_password');
+
       return should(pluginLocal.validate(
         request,
         {password: 'does not match regex'},
@@ -234,7 +241,7 @@ describe('#validate', () => {
         'local',
         true
       ))
-        .be.rejectedWith(pluginLocal.errors.WeakPasswordError);
+        .be.rejectedWith(err);
     });
 
     it('should handle escaped regexes', async () => {
@@ -255,6 +262,5 @@ describe('#validate', () => {
 
       should(response).be.true();
     });
-
   });
 });

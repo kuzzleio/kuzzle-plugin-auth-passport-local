@@ -35,11 +35,11 @@ The default configuration is as follow:
 * `digest` describes how the hashed password is stored in the persisting layer. See other possible values in the [node.js documentation](https://nodejs.org/api/buffer.html#buffer_buf_tostring_encoding_start_end)
 * `encryption` determines whether the hashing algorithm uses `crypto.createHash` (`hash`) or `crypto.createHmac` (`hmac`). For more details, see the [node.js documentation](https://nodejs.org/api/crypto.html)
 * `requirePassword` must be a boolean. If true, this makes this plugin refuse any credentials update or deletion, unless the currently valid password is provided or the change is performed via the `security` controller
-* `resetPasswordExpiresIn`: A positive time representation of the delay after which a reset password token expires (see [ms](https://www.npmjs.com/package/ms) for possible formats). Users with expired passwords are given a `resetPasswordToken` when login in and must change their password to be allowed to log in again.
+* `resetPasswordExpiresIn`: A positive time representation of the delay after which a reset password token expires (see [ms](https://www.npmjs.com/package/ms) for possible formats). Users with expired passwords are given a `resetPasswordToken` when logging in and must change their password to be allowed to log in again.
 
 ## Password policies
 
-Password policies can be used to define a set of additional rules to apply to users or groups of users.
+Password policies can be used to define a set of additional rules to apply to users, or to groups of users.
 
 Each password policy is an object with the following properties:
 
@@ -48,11 +48,11 @@ Each password policy is an object with the following properties:
 * `appliesTo.profiles`: An array of `profile` ids the policy applies to.
 * `appliesTod.roles`: An array of `role` ids the policy applies to.
 
-> Either `users`, `profiles` or `roles` must be set if `appliesTo` is an object.
+> At least one of `users`, `profiles` or `roles` properties must be set if `appliesTo` is an object.
 
 ### Optional properties
 
-* `expiresAfter`: A positive time representation of the delay after which a password expires (see [ms](https://www.npmjs.com/package/ms) for possible formats). Users with expired passwords are given a `resetPasswordToken` when login in and must change their password to be allowed to log in again.
+* `expiresAfter`: A positive time representation of the delay after which a password expires (see [ms](https://www.npmjs.com/package/ms) for possible formats). Users with expired passwords are given a `resetPasswordToken` when logging in and must change their password to be allowed to log in again.
 * `forbidLoginInPassword`: If set to `true`, prevent users to use their username in part of the password. The check is case-**in**sensitive.
 * `forbidReusedPasswordCount`: The number of passwords to store in history and check against when a new password is set.
 * `mustChangePasswordIfSetByAdmin`: If set to `true`, when the password is set for a user by someone else, the user will receive a `resetPasswordToken` upon next login and will have to change her password before being allowed to log in again.
@@ -75,13 +75,13 @@ Each password policy is an object with the following properties:
       },
       "expiresAfter": "30d",
       "mustChangePasswordIfSetByAdmin": true,
-      "passwordRegex": "(?=.*[a-zA-Z])(?=.*[0-9])(?=.{8,}}"
+      "passwordRegex": "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.{8,})"
     },
     {
       "appliesTo": {
         "roles": ["admin"]
       },
-      "passwordRegex": "((?=.*[a-z](?=.*[A-Z])(?=.*[0-9])(?=.*\\W)(?=.{8,}})|(?=.{24,})"
+      "passwordRegex": "^(((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\\W)(?=.{8,}))|(?=.{24,}))"
     }
   ]
 }
@@ -133,7 +133,7 @@ Example (non-HTTP protocol):
     // just skip the fields you don't want to update
     "username": "<new username>",
     "password": "<new password>"
-  },
+  }
 }
 ```
 
@@ -228,7 +228,7 @@ The returned jwt can be used the same way as if the user had logged in.
 A reset token is automatically returned upon login if the password is either expired or must be changed according to the defined policies.
 
 Another way to get a reset token for a user is to use the `getResetPasswordToken` route. 
-For instance, it can be used programatically from a plugin to generate a reset password link for a user in case he lost his password.
+For instance, it can be used programmatically from a plugin to generate a reset password link for a user in case he lost his password.
 
 > :warning: **This route MUST be secured and accessible to permitted users only!**
 
@@ -236,7 +236,7 @@ For instance, it can be used programatically from a plugin to generate a reset p
 {
   "controller": "kuzzle-plugin-auth-passport-local/password",
   "action": "getResetPasswordToken",
-  "kuid": "<kuid>"
+  "_id": "<kuid>"
 }
 ```
 

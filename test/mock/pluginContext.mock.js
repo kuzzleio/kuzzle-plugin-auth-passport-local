@@ -1,6 +1,18 @@
 const
   sinon = require('sinon'),
-  { Request, errors } = require('kuzzle-common-objects');
+  { Request, errors } = require('kuzzle-common-objects'),
+  manifest = require('../../manifest.json');
+
+const getError = id => {
+  const info = manifest.errors[id];
+  const error = new errors[info.class](
+    info.message,
+    `plugin.${manifest.name}.${id}`,
+    0x004000000 + info.code
+  );
+  return error;
+};
+
 
 module.exports = function PluginContext() {
   return {
@@ -38,6 +50,10 @@ module.exports = function PluginContext() {
       },
       Request
     },
-    errors
+    errors,
+    errorsManager: {
+      get: getError,
+      throw: id => { throw getError(id); }
+    }
   };
 };

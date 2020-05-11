@@ -19,8 +19,10 @@ describe('#user', () => {
   });
 
   describe('#getKuzzleUser', () => {
-    it('should return null if no kuid is defined', async () => {
-      delete user.kuid;
+    it('should return null if the user does not exist', async() => {
+      pluginContext.accessors.sdk.security.getUser.rejects(
+        new pluginContext.errors.NotFoundError('not found', 'services.storage.not_found')
+      );
 
       const kuzzleUser = await user.getKuzzleUser();
       should(kuzzleUser).be.null();
@@ -46,16 +48,11 @@ describe('#user', () => {
   });
 
   describe('#getKuzzleUserProfiles', () => {
-    it('should return an empty array if no kuid is set', async () => {
-      delete user.kuid;
+    it('should return an empty array if the user is not found', async () => {
+      user.getKuzzleUser = async () => null;
 
-      should(await user.getKuzzleUserProfiles()).eql([]);
-    });
-
-    it('should return an empty array if no user is found', async () => {
-      pluginContext.accessors.sdk.security.getUser.resolves(null);
-
-      should(await user.getKuzzleUserProfiles()).eql([]);
+      const profiles = await user.getKuzzleUserProfiles();
+      should(profiles).eql([]);
     });
 
     it('should return user profiles', async () => {

@@ -1,4 +1,48 @@
 {
   "name": "kuzzle-plugin-auth-passport-local",
-  "kuzzleVersion": ">=2.0.0 <3.0.0"
+  "kuzzleVersion": ">=2.0.0 <3.0.0",
+  "errors": {
+    "expired_password": {
+      "code": 1,
+      "description": "Expired password",
+      "message": "Expired password",
+      "class": "UnauthorizedError"
+    },
+    "expired_token": {
+      "code": 2,
+      "description": "Expired token",
+      "message": "Expired token",
+      "class": "UnauthorizedError"
+    },
+    "invalid_token": {
+      "code": 3,
+      "description": "Invalid token",
+      "message": "Invalid token",
+      "class": "BadRequestError"
+    },
+    "login_in_password": {
+      "code": 4,
+      "description": "Password cannot contain Username",
+      "message": "Password cannot contain Username",
+      "class": "BadRequestError"
+    },
+    "must_change_password": {
+      "code": 5,
+      "description": "Password change is required",
+      "message": "Password change required",
+      "class": "UnauthorizedError"
+    },
+    "reused_password": {
+      "code": 6,
+      "description": "Cannot reuse password",
+      "message": "Cannot reuse password",
+      "class": "BadRequestError"
+    },
+    "weak_password": {
+      "code": 7,
+      "description": "Password is too weak",
+      "message": "Password is too weak",
+      "class": "BadRequestError"
+    }
+  }
 }

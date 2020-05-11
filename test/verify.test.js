@@ -106,26 +106,27 @@ describe('#verify', () => {
       should(response).eql({kuid: 'foo'});
     });
 
-    it('should return a null kuid if the password is expired', async () => {
+    it('should throw if the password is expired', () => {
       delay = 1000 * 60 * 42 + 1;
 
-      const response = await pluginLocal.verify(request, 'foo', 'bar');
+      return pluginLocal.verify(request, 'foo', 'bar')
+        .then(() => {
+          throw new Error('should not happen');
+        })
+        .catch(error => {
+          should(error).match({
+            status: 401,
+            id: 'plugin.kuzzle-plugin-auth-passport-local.expired_password',
+            code: 0x004000001
+          });
 
-      const err = new pluginLocal.errors.ExpiredPasswordError();
-
-      should(response).match({
-        kuid: null,
-        statusCode: 403,
-        id: err.id,
-        code: err.code
-      });
-
-      should(
-        jsonwebtoken.verify(
-          response.resetToken,
-          pluginLocal.config.resetPasswordSecret
-        ).kuid
-      ).eql('foo');
+          should(
+            jsonwebtoken.verify(
+              error.resetToken,
+              pluginLocal.config.resetPasswordSecret
+            ).resetForKuid
+          ).eql('foo');
+        });
     });
   });
 
@@ -155,26 +156,44 @@ describe('#verify', () => {
       should(response).eql({kuid: 'foo'});
     });
 
-    it('should return a null kuid if the password must be changed', async () => {
+    it('should allow login in if the user is an admin', async () => {
       who = 'someone else';
+
+      pluginContext.accessors.sdk.security.mGetProfiles.onCall(
+        pluginContext.accessors.sdk.security.mGetProfiles.callCount
+      ).resolves([
+        {
+          _id: 'admin',
+          policies: [ {roleId: 'admin'} ]
+        }
+      ]);
 
       const response = await pluginLocal.verify(request, 'foo', 'bar');
 
-      const err = new pluginLocal.errors.MustChangePasswordError();
+      should(response).eql({kuid: 'foo'});
+    });
 
-      should(response).match({
-        kuid: null,
-        statusCode: 401,
-        id: err.id,
-        code: err.code
-      });
+    it('should throw if the password must be changed', () => {
+      who = 'someone else';
 
-      should(
-        jsonwebtoken.verify(
-          response.resetToken,
-          pluginLocal.config.resetPasswordSecret
-        ).kuid
-      ).eql('foo');
+      return pluginLocal.verify(request, 'foo', 'bar')
+        .then(() => {
+          throw new Error('should not happen');
+        })
+        .catch(error => {
+          should(error).match({
+            status: 401,
+            id: 'plugin.kuzzle-plugin-auth-passport-local.must_change_password',
+            code: 0x004000005
+          });
+
+          should(
+            jsonwebtoken.verify(
+              error.resetToken,
+              pluginLocal.config.resetPasswordSecret
+            ).resetForKuid
+          ).eql('foo');
+        });
 
     });
 

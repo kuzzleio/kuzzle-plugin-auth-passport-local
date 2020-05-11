@@ -17,29 +17,22 @@ describe('#getResetPasswordTokenAction', () => {
     pluginLocal.userRepository = new (require('./mock/getUserRepository.mock')(pluginLocal))();
 
     request = new pluginContext.constructors.Request({
-      kuid: 'kuid'
+      _id: 'kuid'
     });
   });
 
   it('should throw if the kuid is missing', () => {
-    delete request.input.args.kuid;
+    const req = new pluginContext.constructors.Request({});
 
-    return should(pluginLocal.getResetPasswordTokenAction(request))
-      .be.rejectedWith(pluginLocal.errors.BadRequestError);
+    return should(pluginLocal.getResetPasswordTokenAction(req))
+      .be.rejectedWith(pluginContext.errors.BadRequestError);
   });
 
   it('should throw if the kuid is an empty string', () => {
-    request.input.args.kuid = '';
+    request.input.resource._id = '';
 
     return should(pluginLocal.getResetPasswordTokenAction(request))
-      .be.rejectedWith(pluginLocal.errors.BadRequestError);
-  });
-
-  it('should throw if the kuid is not a string', () => {
-    request.input.args.kuid = [true];
-
-    return should(pluginLocal.getResetPasswordTokenAction(request))
-      .be.rejectedWith(pluginLocal.errors.BadRequestError);
+      .be.rejectedWith(pluginContext.errors.BadRequestError);
   });
 
   it('should throw if the user does not exist', () => {
@@ -49,7 +42,7 @@ describe('#getResetPasswordTokenAction', () => {
     });
 
     return should(pluginLocal.getResetPasswordTokenAction(request))
-      .be.rejectedWith(pluginLocal.errors.BadRequestError);
+      .be.rejectedWith(pluginContext.errors.BadRequestError);
   });
 
   it('should return a token if the kuid is valid', async () => {
@@ -60,7 +53,7 @@ describe('#getResetPasswordTokenAction', () => {
     );
 
     should(parsed).match({
-      kuid: 'kuid',
+      resetForKuid: 'kuid',
       iss: 'kuzzle-plugin-auth-passport-local'
     });
 
