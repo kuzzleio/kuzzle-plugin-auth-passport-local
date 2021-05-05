@@ -142,7 +142,7 @@ describe('#verify', () => {
       ];
 
       const user = await pluginLocal.userRepository.get('foo');
-      who = user.kuid;
+      who = user._id;
 
       pluginLocal.userRepository.get = async () => {
         user.updater = who;

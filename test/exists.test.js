@@ -22,7 +22,7 @@ describe('#exists', () => {
   });
 
   it('should return false if the user doesn\'t exists', () => {
-    pluginLocal.userRepository.search = () => Promise.resolve({total: 0, hits: []});
+    pluginLocal.userRepository.get = () => Promise.resolve(null);
 
     return should(pluginLocal.exists(request, 'foo')).be.fulfilledWith(false);
   });

@@ -36,10 +36,7 @@ describe('#getResetPasswordTokenAction', () => {
   });
 
   it('should throw if the user does not exist', () => {
-    pluginLocal.userRepository.search.resolves({
-      total: 0,
-      hits: []
-    });
+    pluginLocal.userRepository.get = () => Promise.resolve(null);
 
     return should(pluginLocal.getResetPasswordTokenAction(request))
       .be.rejectedWith(pluginContext.errors.BadRequestError);
