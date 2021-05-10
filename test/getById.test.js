@@ -21,13 +21,13 @@ describe('#getById', () => {
     const user = await pluginLocal.getById(request, 'foo');
 
     should(user).eql({
-      kuid: 'someId',
-      username: 'foo2'
+      kuid: 'foo',
+      username: 'foo'
     });
   });
 
   it('should throw an error if the user doesn\'t exists', () => {
-    pluginLocal.userRepository.search = () => Promise.resolve({ total: 0, hits: []});
+    pluginLocal.userRepository.get = () => Promise.resolve(null);
 
     return should(pluginLocal.getById(request, 'foo'))
       .be.rejectedWith({message: 'No credentials found for username "foo".'});

@@ -60,8 +60,8 @@ describe('#update', () => {
   it('should store the password history and truncate it to the desired length', async () => {
     pluginLocal.getCredentialsFromUserId = async () => {
       const user = new pluginLocal.User();
-      user._id = 'kuid';
-      user.username = 'foo';
+      user._id = 'foo';
+      user.kuid = 'kuid';
       user.userPassword = 'current password';
       user._kuzzle_info = {
         updatedAt: 0
@@ -102,7 +102,7 @@ describe('#update', () => {
       pluginLocal.userRepository.search.returns({
         total: 1,
         hits: [
-          pluginLocal.userRepository.fromDTO({_id: 'someId', username: 'foo'})
+          pluginLocal.userRepository.fromDTO({_id: 'foo', kuid: 'someId'})
         ]
       });
       pluginLocal.config.requirePassword = true;

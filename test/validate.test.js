@@ -152,10 +152,10 @@ describe('#validate', () => {
         hits: [
           pluginLocal.userRepository.fromDTO({
             passwordHistory,
-            _id: 'kuid',
+            _id: 'username',
             algorithm: pluginLocal.config.algorithm,
             encryption: pluginLocal.config.encryption,
-            username: 'username',
+            kuid: 'kuid',
             pepper: false,
             stretching: pluginLocal.config.stretching,
             userPassword: await pluginLocal.passwordManager.encryptPassword('password', 'salt'),

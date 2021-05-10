@@ -18,7 +18,7 @@ describe('#create', () => {
   });
 
   it('should return a user object if the user doesn\'t exists', async () => {
-    pluginLocal.userRepository.get = () => Promise.resolve(null);
+    pluginLocal.userRepository.search = () => Promise.resolve({total: 0, hits: []});
 
     const response = await pluginLocal.create(
       request,

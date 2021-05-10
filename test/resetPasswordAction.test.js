@@ -95,7 +95,7 @@ describe('#resetPasswordAction', () => {
       controller: 'auth',
       body: {
         password: 'password',
-        username: 'foo'
+        username: 'foo2'
       }
     });
 
