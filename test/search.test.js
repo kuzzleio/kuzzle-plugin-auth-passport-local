@@ -6,60 +6,38 @@ const
 describe('#search', () => {
   const pluginContext = new PluginContext();
   let pluginLocal;
-  let request;
-  let body;
+  let query;
 
   beforeEach(async () => {
     pluginLocal = new PluginLocal();
     await pluginLocal.init({}, pluginContext);
     pluginLocal.userRepository = new (require('./mock/getUserRepository.mock')(pluginLocal))();
+    global.kuzzle = { config: { limits: { documentsFetchCount: 10000 } } };
 
-    body = {
-      query: {
-        bool: {
-          must: [
-            {
-              match: {
-                username:  'foo2'
-              }
+    query = {
+      bool: {
+        must: [
+          {
+            match: {
+              username:  'foo2'
             }
-          ]
-        }
+          }
+        ]
       }
     };
-
-    request = new pluginContext.constructors.Request({body});
-
-    // TODO update kuzzle-common-objects
-    // eslint-disable-next-line no-unused-vars
-    request.getBodyObject = (query) => body;
   });
 
   it('should return a search result', async () => {
-    const result = await pluginLocal.search(request);
+    const result = await pluginLocal.search(query);
 
-    should(result).eql({ total: 1, hits: [{ kuid:'foo', username: 'foo2' }] });
+    should(result).eql({ total: 1, hits: [{ kuid:'someId', username: 'foo2' }] });
   });
 
-  it('should throw an error if the qurey contain forbidden words', () => {
-    request = new pluginContext.constructors.Request({
-      body: {
-        query: {
-          bool: {
-            must: [
-              {
-                match: {
-                  userPassword:  '*****'
-                }
-              }
-            ]
-          }
-        }
-      }
-    });
+  it('should throw an error if the query contain forbidden words', () => {
+    query.bool.must[0].match = { algorithm: 'sha512' };
 
-    return should(pluginLocal.search(request, 'foo'))
-      .be.rejectedWith(new pluginContext.context.errors.BadRequestError(
-        `Forbidden keyword "userPassword". Search query must only concern the username`));
+    return should(pluginLocal.search(query))
+      .be.rejectedWith(new pluginLocal.context.errors.BadRequestError(
+        `Forbidden keyword "algorithm". Search query must only concern username property`));
   });
 });

@@ -2,9 +2,9 @@
 
 const should = require('should');
 const sinon = require('sinon');
-const { objectRecursiveMap } = require('../../lib/utils');
+const { objectRecursiveMap } = require('../lib/utils');
 
-describe('#search', () => {
+describe('#utils/objectRecursiveMap', () => {
   let object;
   let fn;
 
@@ -31,6 +31,9 @@ describe('#search', () => {
       }
       else if (key === 'b') {
         return { key: 'c', value: 'nested' };
+      }
+      else if (key === 'bar' || key === 'c') {
+        return {};
       }
       return { value: 'default' };
     });
