@@ -1,7 +1,6 @@
-const
-  should = require('should'),
-  PluginLocal = require('../lib'),
-  PluginContext = require('./mock/pluginContext.mock.js');
+const should = require('should');
+const PluginLocal = require('../lib');
+const PluginContext = require('./mock/pluginContext.mock.js');
 
 describe('#search', () => {
   const pluginContext = new PluginContext();
