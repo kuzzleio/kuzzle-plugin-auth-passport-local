@@ -177,7 +177,7 @@ _.kuzzlerc_
 }
 ```
 
-See [Kuzzle user authentication documentation](https://docs.kuzzle.io/core/2/guides/essentials/user-authentication/) for more details about Kuzzle authentication mechanism.
+See [Kuzzle user authentication documentation](https://docs.kuzzle.io/core/2/guides/main-concepts/authentication/) for more details about Kuzzle authentication mechanism.
 
 ### Reset password
 
