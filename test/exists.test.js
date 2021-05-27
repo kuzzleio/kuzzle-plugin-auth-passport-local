@@ -1,7 +1,7 @@
-const
-  should = require('should'),
-  PluginLocal = require('../lib'),
-  PluginContext = require('./mock/pluginContext.mock.js');
+const should = require('should');
+const PluginLocal = require('../lib');
+const PluginContext = require('./mock/pluginContext.mock.js');
+const { KuzzleRequest } = require('kuzzle');
 
 describe('#exists', () => {
   const pluginContext = new PluginContext();
@@ -14,7 +14,7 @@ describe('#exists', () => {
     await pluginLocal.init({}, pluginContext);
     pluginLocal.userRepository = new (require('./mock/getUserRepository.mock')(pluginLocal))();
 
-    request = new pluginContext.constructors.Request({});
+    request = new KuzzleRequest({});
   });
 
   it('should return true if the user already exists', () => {

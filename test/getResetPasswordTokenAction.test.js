@@ -1,8 +1,8 @@
-const
-  jsonwebtoken = require('jsonwebtoken'),
-  should = require('should'),
-  PluginLocal = require('../lib'),
-  PluginContext = require('./mock/pluginContext.mock.js');
+const jsonwebtoken = require('jsonwebtoken');
+const should = require('should');
+const PluginLocal = require('../lib');
+const PluginContext = require('./mock/pluginContext.mock.js');
+const { KuzzleRequest, BadRequestError } = require('kuzzle');
 
 describe('#getResetPasswordTokenAction', () => {
   let
@@ -16,23 +16,23 @@ describe('#getResetPasswordTokenAction', () => {
     await pluginLocal.init({}, pluginContext);
     pluginLocal.userRepository = new (require('./mock/getUserRepository.mock')(pluginLocal))();
 
-    request = new pluginContext.constructors.Request({
+    request = new KuzzleRequest({
       _id: 'kuid'
     });
   });
 
   it('should throw if the kuid is missing', () => {
-    const req = new pluginContext.constructors.Request({});
+    const req = new KuzzleRequest({});
 
     return should(pluginLocal.getResetPasswordTokenAction(req))
-      .be.rejectedWith(pluginContext.errors.BadRequestError);
+      .be.rejectedWith(BadRequestError);
   });
 
   it('should throw if the kuid is an empty string', () => {
     request.input.resource._id = '';
 
     return should(pluginLocal.getResetPasswordTokenAction(request))
-      .be.rejectedWith(pluginContext.errors.BadRequestError);
+      .be.rejectedWith(BadRequestError);
   });
 
   it('should throw if the user does not exist', () => {
@@ -42,7 +42,7 @@ describe('#getResetPasswordTokenAction', () => {
     });
 
     return should(pluginLocal.getResetPasswordTokenAction(request))
-      .be.rejectedWith(pluginContext.errors.BadRequestError);
+      .be.rejectedWith(BadRequestError);
   });
 
   it('should return a token if the kuid is valid', async () => {

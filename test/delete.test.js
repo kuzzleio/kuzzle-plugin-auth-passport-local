@@ -2,6 +2,7 @@ const should = require('should');
 const sinon = require('sinon');
 const PluginLocal = require('../lib');
 const PluginContext = require('./mock/pluginContext.mock.js');
+const { KuzzleRequest } = require('kuzzle');
 
 describe('#delete', () => {
   const pluginContext = new PluginContext();
@@ -15,7 +16,7 @@ describe('#delete', () => {
     }, pluginContext);
     pluginLocal.userRepository = new (require('./mock/getUserRepository.mock')(pluginLocal))();
 
-    request = new pluginContext.constructors.Request({controller: 'auth'});
+    request = new KuzzleRequest({controller: 'auth'});
   });
 
   it('should return true if the user exists', async () => {
@@ -68,7 +69,7 @@ describe('#delete', () => {
     });
 
     it('should accept if no password is provided but the request is not from the auth controller', () => {
-      request = new pluginContext.constructors.Request({});
+      request = new KuzzleRequest({});
       request.input.body = {currentPassword: ''};
 
       return should(pluginLocal.delete(request, {username: 'foo', 'password': 'bar'}))

@@ -1,9 +1,9 @@
-const
-  should = require('should'),
-  sinon = require('sinon'),
-  jsonwebtoken = require('jsonwebtoken'),
-  PluginLocal = require('../lib'),
-  PluginContext = require('./mock/pluginContext.mock.js');
+const should = require('should');
+const sinon = require('sinon');
+const jsonwebtoken = require('jsonwebtoken');
+const PluginLocal = require('../lib');
+const PluginContext = require('./mock/pluginContext.mock.js');
+const { KuzzleRequest } = require('kuzzle');
 
 describe('#verify', () => {
   const pluginContext = new PluginContext();
@@ -16,7 +16,7 @@ describe('#verify', () => {
     await pluginLocal.init({}, pluginContext);
     pluginLocal.userRepository = new (require('./mock/getUserRepository.mock')(pluginLocal))();
 
-    request = new pluginContext.constructors.Request({});
+    request = new KuzzleRequest({});
   });
 
   it('should return the username if the credentials are valid', async () => {
