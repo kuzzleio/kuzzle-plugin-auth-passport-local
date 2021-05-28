@@ -1,7 +1,8 @@
 const should = require('should');
+const { BadRequestError, ForbiddenError } = require('kuzzle');
+
 const PluginLocal = require('../lib');
 const PluginContext = require('./mock/pluginContext.mock.js');
-const { BadRequestError, ForbiddenError } = require('kuzzle');
 
 describe('#search', () => {
   const pluginContext = new PluginContext();

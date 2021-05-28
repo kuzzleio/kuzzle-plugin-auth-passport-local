@@ -1,8 +1,9 @@
 const should = require('should');
-const PluginContext = require('./mock/pluginContext.mock.js');
-const PluginLocal = require('../lib');
 const sinon = require('sinon');
 const { KuzzleRequest } = require('kuzzle');
+
+const PluginContext = require('./mock/pluginContext.mock.js');
+const PluginLocal = require('../lib');
 
 describe('#update', () => {
   const pluginContext = new PluginContext();
