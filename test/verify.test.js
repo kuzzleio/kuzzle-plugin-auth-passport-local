@@ -1,9 +1,10 @@
 const should = require('should');
 const sinon = require('sinon');
 const jsonwebtoken = require('jsonwebtoken');
+const { KuzzleRequest } = require('kuzzle');
+
 const PluginLocal = require('../lib');
 const PluginContext = require('./mock/pluginContext.mock.js');
-const { KuzzleRequest } = require('kuzzle');
 
 describe('#verify', () => {
   const pluginContext = new PluginContext();

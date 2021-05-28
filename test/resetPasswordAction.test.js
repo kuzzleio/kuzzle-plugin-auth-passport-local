@@ -1,9 +1,10 @@
 const jsonwebtoken = require('jsonwebtoken');
 const should = require('should');
 const sinon = require('sinon');
+const { KuzzleRequest, BadRequestError } = require('kuzzle');
+
 const PluginLocal = require('../lib');
 const PluginContext = require('./mock/pluginContext.mock.js');
-const { KuzzleRequest, BadRequestError } = require('kuzzle');
 
 describe('#resetPasswordAction', () => {
   let
