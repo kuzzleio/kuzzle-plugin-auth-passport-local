@@ -1,4 +1,6 @@
 const should = require('should');
+const { BadRequestError, ForbiddenError } = require('kuzzle');
+
 const PluginLocal = require('../lib');
 const PluginContext = require('./mock/pluginContext.mock.js');
 
@@ -35,7 +37,7 @@ describe('#search', () => {
     searchBody.query.match = { algorithm: 'sha512' };
 
     return should(pluginLocal.search(searchBody))
-      .be.rejectedWith(new pluginLocal.context.errors.ForbiddenError('Forbidden field "algorithm". Only the "username" or "kuid" fields are sortable and only the first is also searchable.'));
+      .be.rejectedWith(new ForbiddenError('Forbidden field "algorithm". Only the "username" or "kuid" fields are sortable and only the first is also searchable.'));
   });
 
   it('should throw an error if the query contains forbidden keyword', () => {
@@ -47,7 +49,7 @@ describe('#search', () => {
     };
 
     return should(pluginLocal.search(searchBody))
-      .be.rejectedWith(new pluginLocal.context.errors.BadRequestError('The "multi_match" keyword is not allowed in this search query for security concerns.'));
+      .be.rejectedWith(new BadRequestError('The "multi_match" keyword is not allowed in this search query for security concerns.'));
   });
 
   it('should throw an error if the query does not concern username', () => {
@@ -59,14 +61,14 @@ describe('#search', () => {
     };
 
     return should(pluginLocal.search(searchBody))
-      .be.rejectedWith(new pluginLocal.context.errors.ForbiddenError('Only the "username" field is searchable, otherwise leave the query empty.'));
+      .be.rejectedWith(new BadRequestError('Only the "username" field is searchable, otherwise leave the query empty.'));
   });
 
   it('should throw an error if the sort contains forbidden fields', () => {
     searchBody.sort = [{ 'passwordHistory.userSalt': 'asc' }];
 
     return should(pluginLocal.search(searchBody))
-      .be.rejectedWith(new pluginLocal.context.errors.ForbiddenError('Forbidden field "passwordHistory.userSalt". Only the "username" or "kuid" fields are sortable and only the first is also searchable.'));
+      .be.rejectedWith(new ForbiddenError('Forbidden field "passwordHistory.userSalt". Only the "username" or "kuid" fields are sortable and only the first is also searchable.'));
   });
 
   it('should throw an error if the sort does not concern username or kuid', () => {
@@ -78,7 +80,7 @@ describe('#search', () => {
     }];
 
     return should(pluginLocal.search(searchBody))
-      .be.rejectedWith(new pluginLocal.context.errors.ForbiddenError('Only the "username" or "kuid" fields are sortable.'));
+      .be.rejectedWith(new BadRequestError('Only the "username" or "kuid" fields are sortable.'));
   });
 
   it('should not detect required fields when they are part of an array values', async () => {
@@ -92,7 +94,7 @@ describe('#search', () => {
     };
 
     await pluginLocal.search(searchBody)
-      .should.be.rejectedWith(new pluginLocal.context.errors.ForbiddenError('Only the "username" field is searchable, otherwise leave the query empty.'));
+      .should.be.rejectedWith(new BadRequestError('Only the "username" field is searchable, otherwise leave the query empty.'));
     
     // But we cannot just throw if an array has non compliant values, this should actually work:
     searchBody.query = {
