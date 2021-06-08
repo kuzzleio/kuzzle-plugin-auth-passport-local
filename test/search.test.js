@@ -43,25 +43,13 @@ describe('#search', () => {
   it('should throw an error if the query contains forbidden keyword', () => {
     searchBody.query = {
       multi_match: {
-        query: 'sha512', 
-        fields: [ 'username', 'algorithm' ] 
+        query: 'sha512',
+        fields: [ 'username', 'algorithm' ]
       }
     };
 
     return should(pluginLocal.search(searchBody))
       .be.rejectedWith(new BadRequestError('The "multi_match" keyword is not allowed in this search query for security concerns.'));
-  });
-
-  it('should throw an error if the query does not concern username', () => {
-    searchBody.query = {
-      evil_keyword: {
-        query: 'password', 
-        fields: [ 'user.*', 'undetectable_wilcard' ] 
-      }
-    };
-
-    return should(pluginLocal.search(searchBody))
-      .be.rejectedWith(new BadRequestError('Only the "username" field is searchable, otherwise leave the query empty.'));
   });
 
   it('should throw an error if the sort contains forbidden fields', () => {
@@ -71,60 +59,32 @@ describe('#search', () => {
       .be.rejectedWith(new ForbiddenError('Forbidden field "passwordHistory.userSalt". Only the "username" or "kuid" fields are sortable and only the first is also searchable.'));
   });
 
-  it('should throw an error if the sort does not concern username or kuid', () => {
-    searchBody.sort = [{
-      evil_keyword: {
-        order : 'asc',
-        fields: ['user.*', 'undetectable_wilcard']
-      }
-    }];
-
-    return should(pluginLocal.search(searchBody))
-      .be.rejectedWith(new BadRequestError('Only the "username" or "kuid" fields are sortable.'));
-  });
-
-  it('should not detect required fields when they are part of an array values', async () => {
-    // In ES multi fields queries, we can use wildcards which are almost undetectable.
-    // If username is in an array, it is likely that multiple fields are listed in there...
-    searchBody.query = {
-      new_unknown_keyword: {
-        query: 'password', 
-        fields: [ 'username', 'undetectable_wilcard', 'user.*' ] 
+  it('should throw an error if the sort contains forbidden keyword', () => {
+    searchBody.sort = {
+      _script: {
+        script: {
+          source: 'doc[userPassword].value * params.factor',
+          params: {
+            factor: 1.1
+          }
+        },
+        order: 'asc'
       }
     };
 
-    await pluginLocal.search(searchBody)
-      .should.be.rejectedWith(new BadRequestError('Only the "username" field is searchable, otherwise leave the query empty.'));
-    
-    // But we cannot just throw if an array has non compliant values, this should actually work:
+    return should(pluginLocal.search(searchBody))
+      .be.rejectedWith(new BadRequestError('The "_script" keyword is not allowed in this search query for security concerns.'));
+  });
+
+  it('should ignore forbidden fields when being used as a simple value', async () => {
     searchBody.query = {
       terms : {
-        username: ['username', 'algorithm', 'foo2']
+        username: ['algorithm', 'multi_match']
       }
     };
 
     const result = await pluginLocal.search(searchBody);
 
     should(result).eql({ total: 1, hits: [{ kuid:'someId', username: 'foo2' }] });
-
-    // Currently, there is just half the solution. A complex query can still slip through the net.
-    // Conclusion: Keep up to date forbiddenKeywords to prevent queries on forbiddenFields
-
-    // Complex query example:
-    // searchBody.query = {
-    //   bool: {
-    //     must: {
-    //       match: {
-    //         username: 'foo2'
-    //       }
-    //     },
-    //     filter: {
-    //       new_unknown_keyword: {
-    //         query: 'password', 
-    //         fields: [ 'user.*', 'undetectable_wilcard' ] 
-    //       }
-    //     }
-    //   }
-    // };
   });
 });
