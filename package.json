@@ -25,22 +25,22 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "debug": "^4.1.1",
+    "debug": "^4.3.2",
     "jsonwebtoken": "^8.5.1",
-    "ms": "^2.1.2",
+    "ms": "^2.1.3",
     "passport": "0.4.1",
     "passport-local": "1.0.0",
-    "semver": "^7.3.2"
+    "semver": "^7.3.5"
   },
   "devDependencies": {
-    "eslint": "^7.0.0",
-    "kuzzle": "^2.12.2",
-    "kuzzle-common-objects": "^4.1.1",
-    "mocha": "^7.1.2",
-    "nyc": "^15.0.1",
+    "eslint": "^7.30.0",
+    "kuzzle": "^2.13.3",
+    "kuzzle-common-objects": "^5.0.2",
+    "mocha": "^9.0.2",
+    "nyc": "^15.1.0",
     "should": "13.2.3",
     "should-sinon": "0.0.6",
-    "sinon": "^9.0.2"
+    "sinon": "^11.1.1"
   },
   "homepage": "https://github.com/kuzzleio/kuzzle-plugin-auth-passport-local#readme",
   "maintainers": [
