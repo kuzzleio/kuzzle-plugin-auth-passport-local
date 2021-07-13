@@ -1,9 +1,10 @@
-const
-  jsonwebtoken = require('jsonwebtoken'),
-  should = require('should'),
-  sinon = require('sinon'),
-  PluginLocal = require('../lib'),
-  PluginContext = require('./mock/pluginContext.mock.js');
+const jsonwebtoken = require('jsonwebtoken');
+const should = require('should');
+const sinon = require('sinon');
+const { KuzzleRequest, BadRequestError } = require('kuzzle');
+
+const PluginLocal = require('../lib');
+const PluginContext = require('./mock/pluginContext.mock.js');
 
 describe('#resetPasswordAction', () => {
   let
@@ -17,7 +18,7 @@ describe('#resetPasswordAction', () => {
     await pluginLocal.init({}, pluginContext);
     pluginLocal.userRepository = new (require('./mock/getUserRepository.mock')(pluginLocal))();
 
-    request = new pluginContext.constructors.Request({
+    request = new KuzzleRequest({
       body: {
         password: 'password',
         token: jsonwebtoken.sign(
@@ -33,45 +34,45 @@ describe('#resetPasswordAction', () => {
   });
 
   it('should throw if no body is given', () => {
-    const req = new pluginContext.constructors.Request({});
+    const req = new KuzzleRequest({});
 
     return should(pluginLocal.resetPasswordAction(req))
-      .be.rejectedWith(pluginContext.errors.BadRequestError);
+      .be.rejectedWith(BadRequestError);
   });
 
   it('should throw if password is not set', () => {
     delete request.input.body.password;
 
     return should(pluginLocal.resetPasswordAction(request))
-      .be.rejectedWith(pluginContext.errors.BadRequestError);
+      .be.rejectedWith(BadRequestError);
   });
 
   it('should throw if password is not a string', () => {
     request.input.body.password = [];
 
     return should(pluginLocal.resetPasswordAction(request))
-      .be.rejectedWith(pluginContext.errors.BadRequestError);
+      .be.rejectedWith(BadRequestError);
   });
 
   it('should throw if the password is an empty string', () => {
     request.input.body.password = '  ';
 
     return should(pluginLocal.resetPasswordAction(request))
-      .be.rejectedWith(pluginContext.errors.BadRequestError);
+      .be.rejectedWith(BadRequestError);
   });
 
   it('should throw if the token is missing', () => {
     delete request.input.body.token;
 
     return should(pluginLocal.resetPasswordAction(request))
-      .be.rejectedWith(pluginContext.errors.BadRequestError);
+      .be.rejectedWith(BadRequestError);
   });
 
   it('should throw if the token is not a string', () => {
     request.input.body.token = true;
 
     return should(pluginLocal.resetPasswordAction(request))
-      .be.rejectedWith(pluginContext.errors.BadRequestError);
+      .be.rejectedWith(BadRequestError);
   });
 
   it('should update the password when ok', async () => {
