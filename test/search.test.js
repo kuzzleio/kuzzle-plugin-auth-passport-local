@@ -1,5 +1,4 @@
 const should = require('should');
-const { BadRequestError, ForbiddenError } = require('kuzzle');
 
 const PluginLocal = require('../lib');
 const PluginContext = require('./mock/pluginContext.mock.js');
@@ -37,7 +36,9 @@ describe('#search', () => {
     searchBody.query.match = { algorithm: 'sha512' };
 
     return should(pluginLocal.search(searchBody))
-      .be.rejectedWith(new ForbiddenError('Forbidden field "algorithm". Only the "username" or "kuid" fields are sortable and only the first is also searchable.'));
+      .be.rejectedWith({
+        message: 'Forbidden field "algorithm". Only the "username" or "kuid" fields are sortable and only the first is also searchable.'
+      });
   });
 
   it('should throw an error if the query contains forbidden keyword', () => {
@@ -49,14 +50,18 @@ describe('#search', () => {
     };
 
     return should(pluginLocal.search(searchBody))
-      .be.rejectedWith(new BadRequestError('The "multi_match" keyword is not allowed in this search query for security concerns.'));
+      .be.rejectedWith({
+        message: 'The "multi_match" keyword is not allowed in this search query for security concerns.'
+      });
   });
 
   it('should throw an error if the sort contains forbidden fields', () => {
     searchBody.sort = [{ 'passwordHistory.userSalt': 'asc' }];
 
     return should(pluginLocal.search(searchBody))
-      .be.rejectedWith(new ForbiddenError('Forbidden field "passwordHistory.userSalt". Only the "username" or "kuid" fields are sortable and only the first is also searchable.'));
+      .be.rejectedWith({
+        message: 'Forbidden field "passwordHistory.userSalt". Only the "username" or "kuid" fields are sortable and only the first is also searchable.'
+      });
   });
 
   it('should throw an error if the sort contains forbidden keyword', () => {
@@ -73,7 +78,9 @@ describe('#search', () => {
     };
 
     return should(pluginLocal.search(searchBody))
-      .be.rejectedWith(new BadRequestError('The "_script" keyword is not allowed in this search query for security concerns.'));
+      .be.rejectedWith({
+        message: 'The "_script" keyword is not allowed in this search query for security concerns.'
+      });
   });
 
   it('should ignore forbidden fields when being used as a simple value', async () => {
