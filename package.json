@@ -42,6 +42,9 @@
     "should-sinon": "0.0.6",
     "sinon": "^11.1.1"
   },
+  "peerDependencies": {
+    "kuzzle": "^2.12.2"
+  },
   "homepage": "https://github.com/kuzzleio/kuzzle-plugin-auth-passport-local#readme",
   "maintainers": [
     {
