@@ -1,6 +1,7 @@
 const
   sinon = require('sinon'),
-  { Request, errors } = require('kuzzle-common-objects'),
+  { errors } = require('kuzzle-common-objects'),
+  { KuzzleRequest } = require('kuzzle'),
   manifest = require('../../manifest.json');
 
 const getError = id => {
@@ -48,7 +49,7 @@ module.exports = function PluginContext() {
         this.create = sinon.stub().resolves();
         this.get = sinon.stub().resolves();
       },
-      Request
+      Request: KuzzleRequest
     },
     errors,
     errorsManager: {

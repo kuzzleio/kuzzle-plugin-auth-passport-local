@@ -1,6 +1,6 @@
 const jsonwebtoken = require('jsonwebtoken');
 const should = require('should');
-const { KuzzleRequest, BadRequestError } = require('kuzzle');
+const { KuzzleRequest } = require('kuzzle');
 
 const PluginLocal = require('../lib');
 const PluginContext = require('./mock/pluginContext.mock.js');
@@ -26,14 +26,14 @@ describe('#getResetPasswordTokenAction', () => {
     const req = new KuzzleRequest({});
 
     return should(pluginLocal.getResetPasswordTokenAction(req))
-      .be.rejectedWith(BadRequestError);
+      .be.rejected();
   });
 
   it('should throw if the kuid is an empty string', () => {
     request.input.resource._id = '';
 
     return should(pluginLocal.getResetPasswordTokenAction(request))
-      .be.rejectedWith(BadRequestError);
+      .be.rejected();
   });
 
   it('should throw if the user does not exist', () => {
@@ -43,7 +43,7 @@ describe('#getResetPasswordTokenAction', () => {
     });
 
     return should(pluginLocal.getResetPasswordTokenAction(request))
-      .be.rejectedWith(BadRequestError);
+      .be.rejected();
   });
 
   it('should return a token if the kuid is valid', async () => {
