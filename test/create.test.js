@@ -44,7 +44,7 @@ describe('#create', () => {
       {
         refresh: 'wait_for',
       }
-    )
+    );
   });
 
   it('should propagate refresh option', async () => {
