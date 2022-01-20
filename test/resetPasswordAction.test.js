@@ -1,7 +1,7 @@
 const jsonwebtoken = require('jsonwebtoken');
 const should = require('should');
 const sinon = require('sinon');
-const { KuzzleRequest, BadRequestError } = require('kuzzle');
+const { KuzzleRequest } = require('kuzzle');
 
 const PluginLocal = require('../lib');
 const PluginContext = require('./mock/pluginContext.mock.js');
@@ -37,42 +37,42 @@ describe('#resetPasswordAction', () => {
     const req = new KuzzleRequest({});
 
     return should(pluginLocal.resetPasswordAction(req))
-      .be.rejectedWith(BadRequestError);
+      .be.rejected();
   });
 
   it('should throw if password is not set', () => {
     delete request.input.body.password;
 
     return should(pluginLocal.resetPasswordAction(request))
-      .be.rejectedWith(BadRequestError);
+      .be.rejected();
   });
 
   it('should throw if password is not a string', () => {
     request.input.body.password = [];
 
     return should(pluginLocal.resetPasswordAction(request))
-      .be.rejectedWith(BadRequestError);
+      .be.rejected();
   });
 
   it('should throw if the password is an empty string', () => {
     request.input.body.password = '  ';
 
     return should(pluginLocal.resetPasswordAction(request))
-      .be.rejectedWith(BadRequestError);
+      .be.rejected();
   });
 
   it('should throw if the token is missing', () => {
     delete request.input.body.token;
 
     return should(pluginLocal.resetPasswordAction(request))
-      .be.rejectedWith(BadRequestError);
+      .be.rejected();
   });
 
   it('should throw if the token is not a string', () => {
     request.input.body.token = true;
 
     return should(pluginLocal.resetPasswordAction(request))
-      .be.rejectedWith(BadRequestError);
+      .be.rejected();
   });
 
   it('should update the password when ok', async () => {
