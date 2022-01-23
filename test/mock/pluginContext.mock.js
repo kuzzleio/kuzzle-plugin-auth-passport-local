@@ -1,9 +1,22 @@
 const sinon = require('sinon');
-const { KuzzleRequest, BadRequestError, PreconditionError, ForbiddenError, NotFoundError } = require('kuzzle');
+const {
+  KuzzleRequest,
+  BadRequestError,
+  PreconditionError,
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError,
+} = require('kuzzle');
 
 const manifest = require('../../manifest.json');
 
-const errors = { BadRequestError, PreconditionError, ForbiddenError, NotFoundError };
+const errors = {
+  BadRequestError,
+  PreconditionError,
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError,
+};
 
 const getError = id => {
   const info = manifest.errors[id];
