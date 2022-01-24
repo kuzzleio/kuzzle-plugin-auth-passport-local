@@ -50,13 +50,37 @@ describe('#update', () => {
       'foo'
     );
 
-    should(pluginLocal.getUsersRepository().update)
-      .be.calledOnce();
-
+    should(pluginLocal.getUsersRepository().update).be.calledWithMatch(
+      {
+        _id: 'foo2',
+        algorithm: 'sha512',
+        stretching: true,
+        encryption: 'hmac',
+        userPassword: 'bar',
+        updater: null,
+        passwordHistory: []
+      },
+      { refresh: 'wait_for' },
+    );
     should(response).eql({
       kuid: 'someId',
       username: 'foo2'
     });
+  });
+
+  it('should propagate refresh option', async () => {
+    request.input.args.refresh = 'false';
+
+    await pluginLocal.update(
+      request,
+      {username: 'foo2', password: 'bar'},
+      'foo'
+    );
+
+    should(pluginLocal.getUsersRepository().update).be.calledWithMatch(
+      {},
+      { refresh: 'false' },
+    );
   });
 
   it('should store the password history and truncate it to the desired length', async () => {

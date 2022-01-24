@@ -18,7 +18,7 @@ describe('#create', () => {
     request = new KuzzleRequest({});
   });
 
-  it('should return a user object if the user doesn\'t exists', async () => {
+  it('should create and return a user object if the user doesn\'t exists', async () => {
     pluginLocal.userRepository.search = () => Promise.resolve({total: 0, hits: []});
 
     const response = await pluginLocal.create(
@@ -31,6 +31,33 @@ describe('#create', () => {
       kuid: 'someId',
       username: 'foo'
     });
+    should(pluginLocal.userRepository.create).be.calledWithMatch(
+      {
+        kuid: 'foo',
+        _id: 'foo',
+        algorithm: 'sha512',
+        stretching: true,
+        pepper: false,
+        encryption: 'hmac',
+        updater: null
+      },
+      {
+        refresh: 'wait_for',
+      }
+    );
+  });
+
+  it('should propagate refresh option', async () => {
+    request.input.args.refresh = 'false';
+    pluginLocal.userRepository.search = () => Promise.resolve({total: 0, hits: []});
+
+    await pluginLocal.create(
+      request,
+      {username: 'foo', password: 'bar'},
+      'foo'
+    );
+
+    should(pluginLocal.userRepository.create).be.calledWithMatch({}, { refresh: 'false' });
   });
 
   it('should throw an error if the user already exists', () => {
