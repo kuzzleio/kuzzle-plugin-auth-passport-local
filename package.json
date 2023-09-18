@@ -33,16 +33,21 @@
     "semver": "^7.3.5"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.6.7",
+    "@commitlint/config-conventional": "^17.6.7",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^10.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/release-notes-generator": "^11.0.4",
+    "semantic-release-config-kuzzle": "^1.0.0",
+    "semantic-release-slack-bot": "^4.0.2",
     "eslint": "^8.7.0",
-    "kuzzle": "^2.13.3",
+    "kuzzle": "2.26.0",
     "mocha": "^9.1.4",
     "nyc": "^15.1.0",
     "should": "13.2.3",
     "should-sinon": "0.0.6",
     "sinon": "^12.0.1"
-  },
-  "peerDependencies": {
-    "kuzzle": "^2.16.8"
   },
   "homepage": "https://github.com/kuzzleio/kuzzle-plugin-auth-passport-local#readme",
   "maintainers": [
