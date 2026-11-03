@@ -16,4 +16,4 @@ nbproject
 .editorconfig
 *.md
 **/*.md
-test
+testeslint.config.js
