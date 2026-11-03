@@ -53,5 +53,9 @@
       "name": "kuzzle",
       "email": "support@kuzzle.io"
     }
+  ],
+  "files": [
+    "lib/",
+    "manifest.json"
   ]
 }
